@@ -5,17 +5,22 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public Animator animator;
+    
     public float moveSpeed = 10f;
     public Vector2 direction;
     private bool facingRight = true;
 
-    [Header("Vertical Movement")] public float jumpSpeed = 15f;
+    [Header("Vertical Movement")] 
+    public float jumpSpeed = 15f;
+    public float jumpDalay = 0.25f;
+    public float jumpTimer;
+    
 
     [Header("Components")] 
-    
+    public Animator animator;
     public Rigidbody2D rb;
     public LayerMask groundLayer;
+    public GameObject characterHolder;
 
     [Header("Physics")] 
     public float maxSpeed = 10f;
@@ -35,14 +40,21 @@ public class Movement : MonoBehaviour
     void Update()
     {
         animator.SetFloat("horizontal", Mathf.Abs(Input.GetAxis("Horizontal")));
-        
-        //animator.SetFloat("vertical", Input.GetAxis("Vertical"));
         animator.SetFloat("vertical", rb.velocity.y);
+        animator.SetBool("onGround", onGround);
+        
+        bool wasOnGround = onGround;
         onGround = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, groundLength, groundLayer) || Physics2D.Raycast(transform.position - colliderOffset, Vector2.down, groundLength, groundLayer);
 
-        if (Input.GetButtonDown("Jump") && onGround)
+        
+        if (!wasOnGround && onGround)
         {
-            Jump();
+            StartCoroutine(JumpSqueeze(1.2f, 0.8f, 0.1f));
+        }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpTimer = Time.time + jumpDalay;
         }
 
         direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -51,7 +63,12 @@ public class Movement : MonoBehaviour
     private void FixedUpdate()
     {
         moveCharaccter(direction.x);
-            modifyPhysics();
+        if (jumpTimer > Time.time && onGround)
+        {
+            Jump();
+        }
+
+        modifyPhysics();
     }
 
     void modifyPhysics()
@@ -86,6 +103,11 @@ public class Movement : MonoBehaviour
         }
     }
 
+    private void CheckAirtime()
+    {
+        
+    }
+
     private void moveCharaccter(float horizontal)
     {
         rb.AddForce(Vector2.right * horizontal * moveSpeed);
@@ -100,6 +122,24 @@ public class Movement : MonoBehaviour
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
         }
     }
+    
+    IEnumerator JumpSqueeze(float xSqueeze, float ySqueeze, float seconds) {
+        Vector3 originalSize = Vector3.one;
+        Vector3 newSize = new Vector3(xSqueeze, ySqueeze, originalSize.z);
+        float t = 0f;
+        while (t <= 1.0) {
+            t += Time.deltaTime / seconds;
+            characterHolder.transform.localScale = Vector3.Lerp(originalSize, newSize, t);
+            yield return null;
+        }
+        t = 0f;
+        while (t <= 1.0) {
+            t += Time.deltaTime / seconds;
+            characterHolder.transform.localScale = Vector3.Lerp(newSize, originalSize, t);
+            yield return null;
+        }
+
+    }
     void Flip()
     {
         facingRight = !facingRight;
@@ -110,6 +150,8 @@ public class Movement : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
+        jumpTimer = 0;
+        StartCoroutine(JumpSqueeze(0.8f, 1.3f, 0.1f));
     }
 
     private void OnDrawGizmos()
