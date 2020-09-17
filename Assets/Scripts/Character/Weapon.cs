@@ -1,36 +1,65 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Weapon : MonoBehaviour
 {
     public Transform firePoint;
     public GameObject bulletPrefab;
+    public GameObject grenadePrefab;
 
     public float rateOfFire = 0.5f;
+    public float chargeTimeMax = 1f;
+    private bool cantShoot;
+    public static float chargeForce { get; set; }
+    public float chargeTime;
 
-    private float timeTilNextShot;
-    // Start is called before the first frame update
+
+    private float _timeTilNextShot;
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Fire1") && timeTilNextShot < Time.time)
+        if (Input.GetMouseButton(1) && chargeTime < chargeTimeMax)
+        {
+            chargeTime += Time.deltaTime;
+        }
+        
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            chargeForce = chargeTime;
+            ShootAlternative();
+            chargeTime = 0;
+            
+        }
+
+        if (Input.GetButton("Fire1") && _timeTilNextShot < Time.time)
         {
             Shoot();
-            timeTilNextShot = Time.time + rateOfFire;
+            _timeTilNextShot = Time.time + rateOfFire;
         }
+    }
+
+    void ShootAlternative()
+    {
+        Prefab(grenadePrefab);
     }
 
     void Shoot()
     {
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Prefab(bulletPrefab);
     }
-    
+
+    private void Prefab(GameObject prefab)
+    {
+        Instantiate(prefab, firePoint.position, firePoint.rotation);
+    }
+
     /*IEnumerator Shoot()
     {
         canShoot = false;

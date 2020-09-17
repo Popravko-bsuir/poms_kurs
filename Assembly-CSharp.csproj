@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\CameraFollowBad.cs" />
      <Compile Include="Assets\Scripts\Character\Bullet.cs" />
      <Compile Include="Assets\Scripts\Character\BulletImpactEffect.cs" />
+     <Compile Include="Assets\Scripts\Character\Grenade.cs" />
      <Compile Include="Assets\Scripts\Character\Movement.cs" />
      <Compile Include="Assets\Scripts\Character\Weapon.cs" />
  <Reference Include="Unity.Timeline.Editor">

@@ -1,21 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BulletImpactEffect : MonoBehaviour
+namespace Character
 {
-    public float effectTime = 1;
-    void Start()
+    public class BulletImpactEffect : MonoBehaviour
     {
-        DestroyObjectDelayed();
-    }
+        public float effectTime = 1;
 
-    void Update()
-    {
-       // Destroy(GameObject, 2);
-    }
-    void DestroyObjectDelayed()
-    {
-        Destroy(gameObject, effectTime);
+        void Start()
+        {
+            DestroyObjectDelayed();
+        }
+
+        void Update()
+        {
+            // Destroy(GameObject, 2);
+        }
+
+        void DestroyObjectDelayed()
+        {
+            Destroy(gameObject, effectTime);
+        }
     }
 }

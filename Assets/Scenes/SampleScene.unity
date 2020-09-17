@@ -284,7 +284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3999995, y: -0.012000561, z: -111.808365}
+  m_LocalPosition: {x: -1.3999997, y: -0.012000561, z: -111.808365}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -843,7 +843,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868697896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3999995, y: -0.012000561, z: -111.808365}
+  m_LocalPosition: {x: -1.3999997, y: -0.012000561, z: -111.808365}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 440491424}
@@ -2325,6 +2325,17 @@ PrefabInstance:
       propertyPath: rateOfFire
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: chargeTimeMax
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: grenadePrefab
+      value: 
+      objectReference: {fileID: 6340483990455152129, guid: 16428859e2fef50408fb1f5e54135870,
+        type: 3}
     - target: {fileID: 5607969657829666945, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
       propertyPath: m_Controller

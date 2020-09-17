@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [Header("Components")]
-    public Rigidbody2D rb;
+    [Header("Components")] public Rigidbody2D rb;
 
     public GameObject impactEffect;
-    
     public float speed = 20f;
-    
+
     void Start()
     {
         rb.velocity = transform.right * speed;
