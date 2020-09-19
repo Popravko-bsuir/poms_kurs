@@ -5,6 +5,7 @@ namespace Character
 {
     public class Movement : MonoBehaviour
     {
+        public Trajectory trajectory;
         public float moveSpeed = 10f;
         public Vector2 direction;
         public static bool isFacingRight = true;
@@ -147,6 +148,11 @@ namespace Character
         {
             isFacingRight = !isFacingRight;
             transform.rotation = Quaternion.Euler(0, isFacingRight ? 0 : 180, 0);
+            trajectory.Hide();
+            if (Weapon.chargeTime >= 3f)
+            {
+                trajectory.Show();
+            }
         }
 
         private void Jump()
