@@ -10,6 +10,8 @@ public class Trajectory : MonoBehaviour
     public GameObject dotsParent;
     public GameObject dotsPrefab;
     public float dotSpacing;
+    [Range(0.01f, 0.3f)] public float dotMinScale;
+    [Range(0.3f, 1f)] public float dotMaxScale;
 
     public Transform[] dotList;
     
@@ -32,10 +34,25 @@ public class Trajectory : MonoBehaviour
     public void PrepareDots()
     {
         dotList = new Transform[dotsNumber];
+        dotsPrefab.transform.localScale = Vector3.one * dotMaxScale;
+
+        var scale = dotMaxScale;
+        var scaleFactor = scale / dotsNumber;
+        
         for (int i = 0; i < dotsNumber; i++)
         {
             dotList [i] = Instantiate(dotsPrefab, null).transform;
             dotList[i].parent = dotsParent.transform;
+            
+            dotList [i].localScale = Vector3.one * scale;
+            if (scale > dotMinScale)
+            {
+                scale -= scaleFactor;
+            }
+
+            {
+                
+            }
         }
     }
 
@@ -56,8 +73,6 @@ public class Trajectory : MonoBehaviour
         }
         else
         {
-            Debug.Log("defolt " + grenadePos.x);
-            Debug.Log("reverse " + grenadePos.x * (-1));
             for (int i = 0; i < dotsNumber; i++)
             {
                 pos.x = ((grenadePos.x) + forceApplied.x * timeStamp * (-1));

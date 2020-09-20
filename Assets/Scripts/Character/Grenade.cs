@@ -12,7 +12,6 @@ namespace Character
         public float explosionTimer;
         public float explosionTime = 5f;
 
-        // Start is called before the first frame update
         void Start()
         {
            // rb.AddForce(Vector2.up * ForceUpScale, ForceMode2D.Impulse);
@@ -21,11 +20,10 @@ namespace Character
 
         private void Throw(Vector2 direction)
         {
-            rb.AddForce(direction * (Weapon.chargeForce * ForceScale), ForceMode2D.Impulse);
-            rb.AddForce(Vector2.up * (Weapon.chargeForce * ForceUpScale),ForceMode2D.Impulse);
+            rb.AddForce(direction * ((Weapon.chargeForce * ForceScale) + Math.Abs(Movement.characterSpeed.x)), ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * ((Weapon.chargeForce * ForceUpScale) + Movement.characterSpeed.y),ForceMode2D.Impulse);
         }
 
-        // Update is called once per frame
         void Update()
         {
             explosionTimer += Time.deltaTime;

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Character
 {
@@ -10,21 +11,27 @@ namespace Character
         public Vector2 direction;
         public static bool isFacingRight = true;
 
-        [Header("Vertical Movement")] public float jumpSpeed = 15f;
+        [Header("Vertical Movement")] 
+        public float jumpSpeed = 15f;
         public float jumpDalay = 0.25f;
         public float jumpTimer;
+        public static Vector2 characterSpeed;
 
 
-        [Header("Components")] public Animator animator;
+        [Header("Components")] 
+        public Animator animator;
         public Rigidbody2D rb;
         public LayerMask groundLayer;
         public GameObject characterHolder;
 
-        [Header("Physics")] public float maxSpeed = 10f;
+        [Header("Physics")] 
+        public float maxSpeed = 10f;
         public float linearDrag = 4f;
         public float gravity = 1;
         public float fallMultiplier = 5f;
-        [Header("Collision")] public bool onGround = false;
+        
+        [Header("Collision")] 
+        public bool onGround = false;
         public float groundLength = 0.3f;
         public Vector3 colliderOffset;
 
@@ -34,6 +41,9 @@ namespace Character
 
         void Update()
         {
+            var velocity = rb.velocity;
+            characterSpeed = new Vector2(velocity.x, velocity.y);
+            
             animator.SetFloat("horizontal", Mathf.Abs(Input.GetAxis("Horizontal")));
             animator.SetFloat("vertical", rb.velocity.y);
             animator.SetBool("onGround", onGround);
@@ -149,10 +159,10 @@ namespace Character
             isFacingRight = !isFacingRight;
             transform.rotation = Quaternion.Euler(0, isFacingRight ? 0 : 180, 0);
             trajectory.Hide();
-            if (Weapon.chargeTime >= 3f)
-            {
-                trajectory.Show();
-            }
+            // if (Weapon.chargeTime >= 3f)
+            // {
+            //     trajectory.Show();
+            // }
         }
 
         private void Jump()
