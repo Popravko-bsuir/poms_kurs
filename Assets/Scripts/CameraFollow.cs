@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -28,7 +25,8 @@ public class CameraFollow : MonoBehaviour
         if (Mathf.Abs(xDifference) >= _threshold.x)
         {
             newPosition.x = follow.x;
-        } 
+        }
+
         if (Mathf.Abs(yDifference) >= _threshold.y)
         {
             newPosition.y = follow.y;
@@ -42,7 +40,8 @@ public class CameraFollow : MonoBehaviour
     private Vector3 calculateThreshold()
     {
         Rect aspect = Camera.main.pixelRect;
-        Vector2 t = new Vector2(Camera.main.orthographicSize * aspect.width / aspect.height, Camera.main.orthographicSize);
+        Vector2 t = new Vector2(Camera.main.orthographicSize * aspect.width / aspect.height,
+            Camera.main.orthographicSize);
         t.x -= followOffset.x;
         t.y -= followOffset.y;
         return t;
@@ -52,6 +51,6 @@ public class CameraFollow : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Vector2 border = calculateThreshold();
-        Gizmos.DrawWireCube(transform.position, new Vector3(border.x *2, border.y * 2, 1));
+        Gizmos.DrawWireCube(transform.position, new Vector3(border.x * 2, border.y * 2, 1));
     }
 }

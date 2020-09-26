@@ -13,7 +13,6 @@ namespace Character
         public GameObject bulletPrefab;
     
         [Header("Alternative Fire")]
-        
         public float rateOfFireAlt = 5f;
         public float chargeTimeMax = 1f;
         public float grenadeCooldown = 5f;
@@ -33,14 +32,16 @@ namespace Character
         void Update()
         {
             _canShootGranade += Time.deltaTime;
-            if (Input.GetMouseButton(1) && chargeTime < chargeTimeMax && _canShootGranade >= grenadeCooldown)
+            if (Input.GetMouseButton(1) && _canShootGranade >= grenadeCooldown)
             {
-                chargeTime += Time.deltaTime;
-            
+                if (chargeTime < chargeTimeMax)
+                {
+                    chargeTime += Time.deltaTime;   
+                }
+                
                 trajectory.Show(); 
                 forceApplied = new Vector2((chargeTime * Grenade.ForceScale) + Math.Abs(Movement.characterSpeed.x), (chargeTime * Grenade.ForceUpScale) + Movement.characterSpeed.y);
                 trajectory.UpdateDots(transform.position, forceApplied);
-
             }
         
 
