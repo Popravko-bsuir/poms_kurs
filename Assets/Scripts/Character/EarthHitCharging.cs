@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class EarthHitCharging : MonoBehaviour
+namespace Character
 {
-    [SerializeField] private float effectTime;
-    void Start()
+    public class EarthHitCharging : MonoBehaviour
     {
-        Destroy(gameObject, effectTime);
+        [SerializeField] private float effectTime = 1f;
+        void Start()
+        {
+            Destroy(gameObject, effectTime);
+        }
     }
 }

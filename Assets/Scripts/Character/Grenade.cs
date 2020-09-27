@@ -5,23 +5,30 @@ namespace Character
 {
     public class Grenade : MonoBehaviour
     {
+        private Weapon _weapon;
+        private Movement _movement;
         public Rigidbody2D rb;
         public GameObject explosionEffect;
-        public static float ForceScale = 10f;
-        public static float ForceUpScale = 5f;
+        // [SerializeField] private float forceScale = 10f;
+        // [SerializeField] private float forceUpScale = 5f;
         public float explosionTimer;
         public float explosionTime = 5f;
 
+        // public float ForceScale => forceScale;
+        //
+        // public float ForceUpScale => forceUpScale;
+
         void Start()
         {
-           // rb.AddForce(Vector2.up * ForceUpScale, ForceMode2D.Impulse);
-            Throw(Movement.isFacingRight ? Vector2.right : Vector2.left);
+            _movement = FindObjectOfType<Movement>();
+            _weapon = FindObjectOfType<Weapon>();
+            Throw(_movement.IsFacingRight ? Vector2.right : Vector2.left);
         }
 
         private void Throw(Vector2 direction)
         {
-            rb.AddForce(direction * ((Weapon.chargeForce * ForceScale) + Math.Abs(Movement.characterSpeed.x)), ForceMode2D.Impulse);
-            rb.AddForce(Vector2.up * ((Weapon.chargeForce * ForceUpScale) + Movement.characterSpeed.y),ForceMode2D.Impulse);
+            rb.AddForce(direction * ((_weapon.ChargeForce * _weapon.ForceScale) + Math.Abs(_movement.rb.velocity.x)), ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * ((_weapon.ChargeForce * _weapon.ForceUpScale) + _movement.rb.velocity.y),ForceMode2D.Impulse);
         }
 
         void Update()

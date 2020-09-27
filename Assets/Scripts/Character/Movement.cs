@@ -11,51 +11,66 @@ namespace Character
     {
         public AirDodgeAnimationController adaController;
         public Trajectory trajectory;
-        public float moveSpeed = 10f;
-        public Vector2 direction;
-        public static bool isFacingRight = true;
+        [SerializeField] private float moveSpeed = 10f;
+        private Vector2 _direction;
+        private bool _isFacingRight = true;
+
+
+        public bool IsFacingRight
+        {
+            get => _isFacingRight;
+        }
 
         [Header("Vertical Movement")] 
-        public float jumpSpeed = 15f;
-        public float jumpDalay = 0.25f;
-        public float jumpTimer;
-        public static Vector2 characterSpeed;
-        
+        [SerializeField] private float jumpSpeed = 15f;
+
+        [SerializeField] private float jumpDalay = 0.25f;
+        private float _jumpTimer;
+
+
         [Header("Abilities")]
-        public float airDodgeMagnitude;
-        public float airDodgeTime = 0.5f;
+        [SerializeField] private float airDodgeMagnitude = 20f;
+
+        [SerializeField] private float airDodgeTime = 0.2f;
+        [SerializeField] private float earthHitJumpForce = 20f;
+        [SerializeField] private float earthHitChargeTime = 0.2f;
+        [SerializeField] private float earthHitChargeForce = 20f;
         private bool _isCollisionAhead;
         private bool _canDodge;
-        public float earthHitJumpForce;
-        public bool earthHitIsStarted;
-        public bool isAlreadyStarted;
-        public float earthHitChargeTime;
-        public float earthHitChargeForce;
+        private bool _earthHitIsStarted;
+        private bool _isAlreadyStarted;
+
 
         [Header("Components")] 
+        [SerializeField] private GameObject earthHitExplosion;
         public GameObject earthHitChargingEffectPrefab;
         public Animator animator;
         public Rigidbody2D rb;
         public LayerMask groundLayer;
         public GameObject characterHolder;
 
+
         [Header("Physics")] 
         public float maxSpeed = 10f;
+
         public float linearDrag = 4f;
         public float gravity = 1;
         public float fallMultiplier = 5f;
-        
+
+
         [Header("Collision")] 
         public bool onGround = false;
+
         public float groundLength = 0.3f;
         public Vector3 colliderOffset;
         public Vector3 rayCastPosition;
         public float airDodgeLength = 2.4f;
         public Vector3 airDodgeOffset;
 
-        void Start()
-        {
-        }
+
+        // void Start()
+        // {
+        // }
 
         void Update()
         {
@@ -63,19 +78,15 @@ namespace Character
 
             if (onGround)
             {
-                //earthHitIsStarted = false;
-                isAlreadyStarted = false;
+                _isAlreadyStarted = false;
                 _canDodge = true;
             }
-
-            var velocity = rb.velocity;
-            characterSpeed = new Vector2(velocity.x, velocity.y);
             
             animator.SetFloat("horizontal", Mathf.Abs(Input.GetAxis("Horizontal")));
             animator.SetFloat("vertical", rb.velocity.y);
             animator.SetBool("onGround", onGround);
-            animator.SetBool("earthHitIsStarted", earthHitIsStarted);
-            animator.SetBool("earthHitIsCharging", isAlreadyStarted);
+            animator.SetBool("earthHitIsStarted", _earthHitIsStarted);
+            animator.SetBool("earthHitIsCharging", _isAlreadyStarted);
 
             bool wasOnGround = onGround;
             onGround =
@@ -85,48 +96,52 @@ namespace Character
             if (!wasOnGround && onGround)
             {
                 StartCoroutine(JumpSqueeze(1.2f, 0.8f, 0.1f));
+                if (_isAlreadyStarted)
+                {
+                    Instantiate(earthHitExplosion, transform.position, transform.rotation);
+                }
             }
 
             if (Input.GetButtonDown("Jump"))
             {
-                jumpTimer = Time.time + jumpDalay;
+                _jumpTimer = Time.time + jumpDalay;
             }
 
-            if (Input.GetButtonDown("EarthHit") && !onGround && !earthHitIsStarted)
+            if (Input.GetButtonDown("EarthHit") && !onGround && !_earthHitIsStarted)
             {
-                earthHitIsStarted = true;
+                _earthHitIsStarted = true;
                 EarthHitPreparation();
             }
 
             if (Input.GetButtonDown("AirDodge") && !onGround && _canDodge)
             {
                 StartCoroutine(adaController.ShowAirDodgeEffect(airDodgeTime));
-                CheckCollisionAhead(isFacingRight ? Vector2.right : Vector2.left);
-                if((direction.x > 0 && rb.velocity.x < 0) || (direction.x < 0 && rb.velocity.x > 0))
+                CheckCollisionAhead(_isFacingRight ? Vector2.right : Vector2.left);
+                if((_direction.x > 0 && rb.velocity.x < 0) || (_direction.x < 0 && rb.velocity.x > 0))
                 {
-                    AirDodgeBackvard(isFacingRight ? Vector2.right : Vector2.left);
+                    AirDodgeBackvard(_isFacingRight ? Vector2.right : Vector2.left);
                 }
                 if (_isCollisionAhead)
                 {
-                    AirDodgeBackvard(isFacingRight ? Vector2.right : Vector2.left);
+                    AirDodgeBackvard(_isFacingRight ? Vector2.right : Vector2.left);
                 }
                 else
                 {
-                    StartCoroutine(AirDodgeForvard(isFacingRight ? Vector2.right : Vector2.left));
+                    StartCoroutine(AirDodgeForvard(_isFacingRight ? Vector2.right : Vector2.left));
                 }
 
                 _isCollisionAhead = false;
                 _canDodge = false;
             }
 
-            direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            _direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         }
 
         private void FixedUpdate()
         {
-            MoveCharacter(direction.x);
+            MoveCharacter(_direction.x);
 
-            if (jumpTimer > Time.time && onGround)
+            if (_jumpTimer > Time.time && onGround)
             {
                 Jump();
             }
@@ -136,11 +151,11 @@ namespace Character
 
         void ModifyPhysics()
         {
-            bool changingDirections = (direction.x > 0 && rb.velocity.x < 0) || (direction.x < 0 && rb.velocity.x > 0);
+            bool changingDirections = (_direction.x > 0 && rb.velocity.x < 0) || (_direction.x < 0 && rb.velocity.x > 0);
 
             if (onGround)
             {
-                if (Mathf.Abs(direction.x) < 0.4f || changingDirections)
+                if (Mathf.Abs(_direction.x) < 0.4f || changingDirections)
                 {
                     rb.drag = linearDrag;
                 }
@@ -157,10 +172,9 @@ namespace Character
                 rb.gravityScale = gravity;
                 rb.drag = linearDrag * 0.15f;
                 
-                if (earthHitIsStarted && !onGround && !isAlreadyStarted && Math.Abs(characterSpeed.y) < 0.2f)
+                if (_earthHitIsStarted && !onGround && !_isAlreadyStarted && Math.Abs(rb.velocity.y) < 0.3f)
                 {
-                    isAlreadyStarted = true;
-                    Debug.Log("Bad");
+                    _isAlreadyStarted = true;
                     StartCoroutine(EarthHitCharging());
                     ShowChargingEffect();
                 }
@@ -188,7 +202,7 @@ namespace Character
         {
             rb.AddForce(Vector2.right * (horizontal * moveSpeed));
 
-            if ((horizontal > 0 && !isFacingRight) || (horizontal < 0 && isFacingRight))
+            if ((horizontal > 0 && !_isFacingRight) || (horizontal < 0 && _isFacingRight))
             {
                 Flip();
             }
@@ -223,8 +237,8 @@ namespace Character
 
         void Flip()
         {
-            isFacingRight = !isFacingRight;
-            transform.rotation = Quaternion.Euler(0, isFacingRight ? 0 : 180, 0);
+            _isFacingRight = !_isFacingRight;
+            transform.rotation = Quaternion.Euler(0, _isFacingRight ? 0 : 180, 0);
             trajectory.Hide();
         }
 
@@ -232,7 +246,7 @@ namespace Character
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);
             rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
-            jumpTimer = 0;
+            _jumpTimer = 0;
             StartCoroutine(JumpSqueeze(0.8f, 1.3f, 0.1f));
         }
 
@@ -266,12 +280,12 @@ namespace Character
 
         private void EarthHitPreparation()
         {
-            rb.AddForce(Vector2.up * (Math.Abs(characterSpeed.y) + earthHitJumpForce), ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * (Math.Abs(rb.velocity.y) + earthHitJumpForce), ForceMode2D.Impulse);
         }
 
         private IEnumerator EarthHitCharging()
         {
-            earthHitIsStarted = false;
+            _earthHitIsStarted = false;
             rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
             yield return new WaitForSeconds(earthHitChargeTime);
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;

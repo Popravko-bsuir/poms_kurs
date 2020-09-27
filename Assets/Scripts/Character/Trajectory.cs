@@ -4,33 +4,34 @@ namespace Character
 {
     public class Trajectory : MonoBehaviour
     {
-        public int dotsNumber;
+        [Header("Components")]
         public GameObject dotsParent;
         public GameObject dotsPrefab;
-        public float dotSpacing;
-        [Range(0.01f, 0.3f)] public float dotMinScale;
-        [Range(0.3f, 1f)] public float dotMaxScale;
+        
+        private Movement _movement;
 
-        public Transform[] dotList;
+        [SerializeField] private int dotsNumber = 20;
+        [SerializeField] private float dotSpacing = 0.03f;
+        [SerializeField] [Range(0.01f, 0.3f)] private float dotMinScale = 0.1f;
+        [SerializeField] [Range(0.3f, 1f)] private float dotMaxScale = 0.3f;
 
-        public Vector2 pos;
+        private Transform[] _dotList;
 
-        public float timeStamp;
+        private Vector2 _pos;
+
+        private float _timeStamp;
 
 
         void Start()
         {
+            _movement = FindObjectOfType<Movement>();
             Hide();
             PrepareDots();
         }
-
-        void Update()
-        {
-        }
-
+        
         public void PrepareDots()
         {
-            dotList = new Transform[dotsNumber];
+            _dotList = new Transform[dotsNumber];
             dotsPrefab.transform.localScale = Vector3.one * dotMaxScale;
 
             var scale = dotMaxScale;
@@ -38,10 +39,10 @@ namespace Character
 
             for (int i = 0; i < dotsNumber; i++)
             {
-                dotList[i] = Instantiate(dotsPrefab, null).transform;
-                dotList[i].parent = dotsParent.transform;
+                _dotList[i] = Instantiate(dotsPrefab, null).transform;
+                _dotList[i].parent = dotsParent.transform;
 
-                dotList[i].localScale = Vector3.one * scale;
+                _dotList[i].localScale = Vector3.one * scale;
                 if (scale > dotMinScale)
                 {
                     scale -= scaleFactor;
@@ -51,29 +52,29 @@ namespace Character
 
         public void UpdateDots(Vector3 grenadePos, Vector2 forceApplied)
         {
-            timeStamp = dotSpacing;
-            if (Movement.isFacingRight)
+            _timeStamp = dotSpacing;
+            if (_movement.IsFacingRight)
             {
                 for (int i = 0; i < dotsNumber; i++)
                 {
-                    pos.x = (grenadePos.x + forceApplied.x * timeStamp);
-                    pos.y = (grenadePos.y + forceApplied.y * timeStamp) -
-                            (Physics2D.gravity.magnitude * timeStamp * timeStamp) / 2f;
+                    _pos.x = (grenadePos.x + forceApplied.x * _timeStamp);
+                    _pos.y = (grenadePos.y + forceApplied.y * _timeStamp) -
+                            (Physics2D.gravity.magnitude * _timeStamp * _timeStamp) / 2f;
 
-                    dotList[i].position = pos;
-                    timeStamp += dotSpacing;
+                    _dotList[i].position = _pos;
+                    _timeStamp += dotSpacing;
                 }
             }
             else
             {
                 for (int i = 0; i < dotsNumber; i++)
                 {
-                    pos.x = ((grenadePos.x) + forceApplied.x * timeStamp * (-1));
-                    pos.y = ((grenadePos.y) + forceApplied.y * timeStamp) -
-                            (Physics2D.gravity.magnitude * timeStamp * timeStamp) / 2f;
+                    _pos.x = ((grenadePos.x) + forceApplied.x * _timeStamp * (-1));
+                    _pos.y = ((grenadePos.y) + forceApplied.y * _timeStamp) -
+                            (Physics2D.gravity.magnitude * _timeStamp * _timeStamp) / 2f;
 
-                    dotList[i].position = pos;
-                    timeStamp += dotSpacing;
+                    _dotList[i].position = _pos;
+                    _timeStamp += dotSpacing;
                 }
             }
         }

@@ -153,7 +153,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -389,7 +389,7 @@ GameObject:
   m_Component:
   - component: {fileID: 310024439}
   - component: {fileID: 310024438}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Trajectory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -408,16 +408,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 514f96c7c7c555e4aa0ac7f0b4bc8177, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dotsNumber: 20
   dotsParent: {fileID: 379701491}
   dotsPrefab: {fileID: 4347769752243743773, guid: 7146a103fa98de8489ff0211f810d7e6,
     type: 3}
+  dotsNumber: 20
   dotSpacing: 0.03
   dotMinScale: 0.1
   dotMaxScale: 0.3
-  dotList: []
-  pos: {x: 0, y: 0}
-  timeStamp: 0
 --- !u!4 &310024439
 Transform:
   m_ObjectHideFlags: 0
@@ -442,7 +439,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 379701492}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -682,7 +679,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.399999, y: 4.0599985, z: -111.808365}
+  m_LocalPosition: {x: -1.3999995, y: 4.0599985, z: -111.808365}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1241,7 +1238,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868697896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.399999, y: 4.0599985, z: -111.808365}
+  m_LocalPosition: {x: -1.3999995, y: 4.0599985, z: -111.808365}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 440491424}
@@ -2117,7 +2114,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -2435,7 +2432,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -2565,7 +2562,7 @@ GameObject:
   - component: {fileID: 1800267155}
   - component: {fileID: 1800267154}
   - component: {fileID: 1800267156}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: AirDodgeAnimation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2829,7 +2826,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -3287,7 +3284,7 @@ PrefabInstance:
     - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
       propertyPath: rateOfFire
-      value: 0.3
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
@@ -3305,6 +3302,16 @@ PrefabInstance:
       propertyPath: trajectory
       value: 
       objectReference: {fileID: 310024438}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: grenadeCooldown
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: rateOfFireAlt
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5607969657829666945, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
       propertyPath: m_Controller
@@ -3314,6 +3321,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Character
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607969657829666948, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5607969657829666950, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
@@ -3391,6 +3403,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9172597606242152506, guid: dc46dc49dfe45f748a046909e4ed2f35,
         type: 3}
+    - target: {fileID: 5607969657829666950, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: _airDodgeTime
+      value: 1.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607969657829666950, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: earthHitExplosion
+      value: 
+      objectReference: {fileID: 212726629288004107, guid: 12c4e578cd5ba8e4c85822cf822abdef,
+        type: 3}
+    - target: {fileID: 5607969657829666951, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5607969658010434773, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3446,10 +3474,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5607969658132431145, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5607969659344508648, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.109
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607969659344508655, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607969659669416917, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5607969657829666945, guid: 4d082c9ca1524374ca47ad6354dfc645, type: 3}
