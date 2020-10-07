@@ -9,6 +9,7 @@ public class Bullet : MonoBehaviour
 
     void Start()
     {
+        Destroy(gameObject, 3f);
         rb.velocity = transform.right * speed;
     }
 
