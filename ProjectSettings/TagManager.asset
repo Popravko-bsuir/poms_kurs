@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Box
+  - Enemie
+  - EnemieSite
+  - Obstacle
+  - Corpses
+  - EnemieBug
   layers:
   - Default
   - TransparentFX
@@ -16,8 +22,8 @@ TagManager:
   - Ground
   - Wall
   - Character
-  - 
-  - 
+  - Enemie
+  - EnemieSite
   - 
   - 
   - 

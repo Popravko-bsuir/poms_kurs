@@ -8,16 +8,6 @@ namespace Character
 
         void Start()
         {
-            DestroyObjectDelayed();
-        }
-
-        void Update()
-        {
-            // Destroy(GameObject, 2);
-        }
-
-        void DestroyObjectDelayed()
-        {
             Destroy(gameObject, effectTime);
         }
     }

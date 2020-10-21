@@ -71,6 +71,7 @@
      <Compile Include="Assets\Scripts\Character\Trajectory.cs" />
      <Compile Include="Assets\Scripts\Character\Weapon.cs" />
      <Compile Include="Assets\Scripts\Enemies\Bug\BugAI.cs" />
+     <Compile Include="Assets\Scripts\Enemies\Bug\ZombieCorpses.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/slllike/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>

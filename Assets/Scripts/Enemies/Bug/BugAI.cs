@@ -1,54 +1,58 @@
 ﻿using System;
-using System.Collections;
 using Pathfinding;
-using Pathfinding.Util;
-using TreeEditor;
 using UnityEngine;
 
 namespace Enemies.Bug
 {
     public class BugAI : MonoBehaviour
     {
-        public Rigidbody2D target;
         public Transform targetForBug;
-        private Vector2 trgt;
+        private Vector2 target;
         public float speed = 200f;
         public float nextWayPoyntDistance = 1f;
+        public Vector2 direction;
 
         private Path _path;
         private int _currentWaypoynt;
         private bool _isReachedEndOfPath;
 
-        private Seeker seeker;
+        [SerializeField] private Seeker seeker;
         [SerializeField] private Rigidbody2D rb;
+
+        private bool _characterIsInRange;
+        private bool _corpsesIsInRange;
+
+        public bool CorpsesIsInRange
+        {
+            set => _corpsesIsInRange = value;
+        }
 
         private bool _isFacingLeft = true;
 
-        [SerializeField] private float jumpForce = 50f; 
+        [SerializeField] private float jumpForce = 50f;
+
+        private const float RateOfJumping = 1f;
+        [SerializeField] private float _jumpTimer;
         public bool isOnGround;
-        public bool canJump = true;
         [SerializeField] private float rayCastLength;
         public LayerMask groundLayer;
 
         void Start()
         {
-            seeker = FindObjectOfType<Seeker>();
-            
             InvokeRepeating("UpdatePath", 0f, 0.5f);
         }
 
         void UpdatePath()
         {
-            if (targetForBug != null && seeker.IsDone())
+            if (_characterIsInRange && seeker.IsDone() || _corpsesIsInRange && seeker.IsDone())
             {
-                seeker.StartPath(rb.position, trgt, OnPathComplete);
+                seeker.StartPath(rb.position, target, OnPathComplete);
             }
         }
 
         void Update()
-        { 
+        {
             isOnGround = Physics2D.Raycast(rb.position, Vector2.down, rayCastLength, groundLayer);
-            
         }
 
         void FixedUpdate()
@@ -63,28 +67,26 @@ namespace Enemies.Bug
                 _isReachedEndOfPath = true;
                 return;
             }
-
-            _isReachedEndOfPath = false;
-
-            float direction = _path.vectorPath[_currentWaypoynt].x - rb.position.x;
-            rb.AddForce(Vector2.right * (direction * speed * Time.deltaTime));
-
-            if (Mathf.Abs(rb.position.x - _path.vectorPath[_currentWaypoynt].x) < 2f &&
-                _path.vectorPath[_currentWaypoynt].y - rb. position.y > 1f && isOnGround && canJump)
+            else
             {
-                rb.AddForce(Vector2.up * jumpForce,ForceMode2D.Impulse);
-                canJump = false;
-                StartCoroutine(JumpTimer());
+                _isReachedEndOfPath = false;
+            }
+
+            direction = ((Vector2) _path.vectorPath[_currentWaypoynt] - rb.position).normalized;
+            rb.AddForce(Vector2.right * (direction.x * speed * Time.deltaTime));
+            if (direction.y > 0.7f && isOnGround && _jumpTimer < Time.time)
+            {
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                _jumpTimer = RateOfJumping + Time.time;
             }
 
             float distance = Vector2.Distance(rb.position, _path.vectorPath[_currentWaypoynt]);
-
             if (distance < nextWayPoyntDistance)
             {
                 _currentWaypoynt++;
             }
 
-            if (rb.velocity.x < 0 && !_isFacingLeft || rb.velocity.x > 0 && _isFacingLeft)
+            if (direction.x < 0 && !_isFacingLeft || direction.x > 0 && _isFacingLeft)
             {
                 Flip();
             }
@@ -98,7 +100,7 @@ namespace Enemies.Bug
                 _currentWaypoynt = 0;
             }
         }
-        
+
         void Flip()
         {
             _isFacingLeft = !_isFacingLeft;
@@ -109,29 +111,56 @@ namespace Enemies.Bug
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(rb.position, rb.position + Vector2.down * rayCastLength);
+            Gizmos.DrawLine(rb.position, rb.position + direction);
         }
-
-        private IEnumerator JumpTimer()
+        
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            yield return new WaitForSeconds(1f);
-            canJump = true;
+            if (other.gameObject.CompareTag("Player"))
+            {
+                _characterIsInRange = true;
+            }
+
+            if (other.gameObject.CompareTag("Corpses"))
+            {
+                _corpsesIsInRange = true;
+            }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Corpses"))
             {
                 targetForBug = other.gameObject.transform;
-                trgt = new Vector2(targetForBug.position.x, targetForBug.position.y);
+                target = new Vector2(targetForBug.position.x, targetForBug.position.y);
+                // target = new Vector2(other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+            }
+
+            if (other.gameObject.CompareTag("Player") && !_corpsesIsInRange)
+            {
+                targetForBug = other.gameObject.transform;
+                target = new Vector2(targetForBug.position.x, targetForBug.position.y);
+                // target = new Vector2(other.gameObject.transform.position.y, other.gameObject.transform.position.y);
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnTriggerExit2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                targetForBug = null;
+                _characterIsInRange = false;
+                BugStop();
             }
+        }
+
+        private void BugStop()
+        {
+            seeker.StartPath(rb.position, rb.position, OnPathComplete);
+        }
+
+        public void DestroyBug()
+        {
+            Destroy(gameObject);
         }
     }
 }

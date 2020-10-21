@@ -19,7 +19,10 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        Instantiate(impactEffect, transform.position, transform.rotation);
-        Destroy(gameObject);
+        if (col.gameObject.CompareTag("Obstacle") || col.gameObject.CompareTag("Enemie"))
+        {
+            Instantiate(impactEffect, transform.position, transform.rotation);
+            Destroy(gameObject);
+        }
     }
 }

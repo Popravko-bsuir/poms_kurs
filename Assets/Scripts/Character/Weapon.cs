@@ -36,7 +36,6 @@ namespace Character
         void Start()
         {
             _canShootGranade = grenadeCooldown;
-            movement = FindObjectOfType<Movement>();
         }
 
         void Update()

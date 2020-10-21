@@ -8,7 +8,7 @@ namespace Character
         public GameObject dotsParent;
         public GameObject dotsPrefab;
         
-        private Movement _movement;
+        [SerializeField] private Movement _movement;
 
         [SerializeField] private int dotsNumber = 20;
         [SerializeField] private float dotSpacing = 0.03f;
@@ -24,7 +24,6 @@ namespace Character
 
         void Start()
         {
-            _movement = FindObjectOfType<Movement>();
             Hide();
             PrepareDots();
         }
