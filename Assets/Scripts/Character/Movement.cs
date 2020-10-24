@@ -9,7 +9,7 @@ namespace Character
 {
     public class Movement : MonoBehaviour
     {
-        public AirDodgeAnimationController adaController;
+        public DashAnimation dashAnimation;
         public Trajectory trajectory;
         [SerializeField] private float moveSpeed = 10f;
         private Vector2 _direction;
@@ -29,9 +29,9 @@ namespace Character
 
 
         [Header("Abilities")]
-        [SerializeField] private float airDodgeMagnitude = 20f;
+        [SerializeField] private float dashMagnitude = 20f;
 
-        [SerializeField] private float airDodgeTime = 0.2f;
+        [SerializeField] private float dashTime = 0.2f;
         [SerializeField] private float earthHitJumpForce = 20f;
         [SerializeField] private float earthHitChargeTime = 0.2f;
         [SerializeField] private float earthHitChargeForce = 20f;
@@ -64,8 +64,8 @@ namespace Character
         public float groundLength = 0.3f;
         public Vector3 colliderOffset;
         public Vector3 rayCastPosition;
-        public float airDodgeLength = 2.4f;
-        public Vector3 airDodgeOffset;
+        public float dashLength = 2.4f;
+        public Vector3 dashOffset;
 
 
         // void Start()
@@ -115,7 +115,7 @@ namespace Character
 
             if (Input.GetButtonDown("AirDodge") && !onGround && _canDodge)
             {
-                StartCoroutine(adaController.ShowAirDodgeEffect(airDodgeTime));
+                StartCoroutine(dashAnimation.ShowDashAnimation(dashTime));
                 CheckCollisionAhead(_isFacingRight ? Vector2.right : Vector2.left);
                 if((_direction.x > 0 && rb.velocity.x < 0) || (_direction.x < 0 && rb.velocity.x > 0))
                 {
@@ -255,27 +255,27 @@ namespace Character
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position + colliderOffset, transform.position + colliderOffset + Vector3.down * groundLength);
             Gizmos.DrawLine(transform.position - colliderOffset, transform.position - colliderOffset + Vector3.down * groundLength);
-            Gizmos.DrawLine((transform.position + rayCastPosition) + airDodgeOffset, (transform.position + rayCastPosition) + airDodgeOffset + Vector3.right * airDodgeLength);
-            Gizmos.DrawLine((transform.position + rayCastPosition) - airDodgeOffset, (transform.position + rayCastPosition) - airDodgeOffset + Vector3.right * airDodgeLength);
+            Gizmos.DrawLine((transform.position + rayCastPosition) + dashOffset, (transform.position + rayCastPosition) + dashOffset + Vector3.right * dashLength);
+            Gizmos.DrawLine((transform.position + rayCastPosition) - dashOffset, (transform.position + rayCastPosition) - dashOffset + Vector3.right * dashLength);
         }
 
         private IEnumerator AirDodgeForvard(Vector2 direction)
         {
-            rb.AddForce(direction * airDodgeMagnitude, ForceMode2D.Impulse);
-            yield return new WaitForSeconds(airDodgeTime); 
-            rb.AddForce(direction * ((airDodgeMagnitude - 5) * (-1)), ForceMode2D.Impulse);
+            rb.AddForce(direction * dashMagnitude, ForceMode2D.Impulse);
+            yield return new WaitForSeconds(dashTime); 
+            rb.AddForce(direction * ((dashMagnitude - 5) * (-1)), ForceMode2D.Impulse);
         }
 
         private void AirDodgeBackvard(Vector2 direction)
         {
-            rb.AddForce(direction * airDodgeMagnitude, ForceMode2D.Impulse);
+            rb.AddForce(direction * dashMagnitude, ForceMode2D.Impulse);
         }
 
         private void CheckCollisionAhead(Vector2 direction)
         {
             _isCollisionAhead = 
-                Physics2D.Raycast((transform.position + rayCastPosition) + airDodgeOffset, direction, airDodgeLength, groundLayer) || 
-                Physics2D.Raycast((transform.position + rayCastPosition) - airDodgeOffset, direction, airDodgeLength, groundLayer);
+                Physics2D.Raycast((transform.position + rayCastPosition) + dashOffset, direction, dashLength, groundLayer) || 
+                Physics2D.Raycast((transform.position + rayCastPosition) - dashOffset, direction, dashLength, groundLayer);
         }
 
         private void EarthHitPreparation()

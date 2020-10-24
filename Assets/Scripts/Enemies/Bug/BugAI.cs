@@ -7,8 +7,10 @@ namespace Enemies.Bug
     public class BugAI : MonoBehaviour
     {
         public Transform targetForBug;
+        public Transform patrolingRaycastPosition;
         private Vector2 target;
         public float speed = 200f;
+        [SerializeField] private float patrolingSpeed;
         public float nextWayPoyntDistance = 1f;
         public Vector2 direction;
 
@@ -19,14 +21,9 @@ namespace Enemies.Bug
         [SerializeField] private Seeker seeker;
         [SerializeField] private Rigidbody2D rb;
 
-        private bool _characterIsInRange;
+        [SerializeField] private bool _characterIsInRange;
         private bool _corpsesIsInRange;
-
-        public bool CorpsesIsInRange
-        {
-            set => _corpsesIsInRange = value;
-        }
-
+        
         private bool _isFacingLeft = true;
 
         [SerializeField] private float jumpForce = 50f;
@@ -35,6 +32,7 @@ namespace Enemies.Bug
         [SerializeField] private float _jumpTimer;
         public bool isOnGround;
         [SerializeField] private float rayCastLength;
+        [SerializeField] private float patrolHorizontalRayCastLength;
         public LayerMask groundLayer;
 
         void Start()
@@ -57,39 +55,60 @@ namespace Enemies.Bug
 
         void FixedUpdate()
         {
-            if (_path == null)
+            if (!_characterIsInRange && !_corpsesIsInRange)
             {
-                return;
-            }
+                bool pitIsAhead = Physics2D.Raycast(patrolingRaycastPosition.position, Vector3.down, patrolHorizontalRayCastLength, groundLayer);
+                transform.Translate(Vector2.left * (patrolingSpeed * Time.deltaTime));
+                Debug.Log("hui" + pitIsAhead);
+                if (CheckCollisionAhead(_isFacingLeft? Vector2.left : Vector2.right) || !pitIsAhead)
+                {
+                    Flip();
+                }
 
-            if (_currentWaypoynt >= _path.vectorPath.Count)
-            {
-                _isReachedEndOfPath = true;
-                return;
             }
             else
             {
-                _isReachedEndOfPath = false;
-            }
+                if (_path == null)
+                {
+                    return;
+                }
 
-            direction = ((Vector2) _path.vectorPath[_currentWaypoynt] - rb.position).normalized;
-            rb.AddForce(Vector2.right * (direction.x * speed * Time.deltaTime));
-            if (direction.y > 0.7f && isOnGround && _jumpTimer < Time.time)
-            {
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                _jumpTimer = RateOfJumping + Time.time;
-            }
+                if (_currentWaypoynt >= _path.vectorPath.Count)
+                {
+                    _isReachedEndOfPath = true;
+                    return;
+                }
+                else
+                {
+                    _isReachedEndOfPath = false;
+                }
+                
+                direction = ((Vector2) _path.vectorPath[_currentWaypoynt] - rb.position).normalized;
+                rb.AddForce(Vector2.right * (direction.x * speed * Time.deltaTime));
+                if (direction.y > 0.7f && isOnGround && _jumpTimer < Time.time)
+                {
+                    rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                    _jumpTimer = RateOfJumping + Time.time;
+                }
 
-            float distance = Vector2.Distance(rb.position, _path.vectorPath[_currentWaypoynt]);
-            if (distance < nextWayPoyntDistance)
-            {
-                _currentWaypoynt++;
-            }
+                float distance = Vector2.Distance(rb.position, _path.vectorPath[_currentWaypoynt]);
+                if (distance < nextWayPoyntDistance)
+                {
+                    _currentWaypoynt++;
+                }
 
-            if (direction.x < 0 && !_isFacingLeft || direction.x > 0 && _isFacingLeft)
-            {
-                Flip();
+                if (direction.x < 0 && !_isFacingLeft || direction.x > 0 && _isFacingLeft)
+                {
+                    Flip();
+                }
             }
+        }
+
+        private bool CheckCollisionAhead(Vector2 direction)
+        {
+            bool collisionIsAhead;
+            collisionIsAhead = Physics2D.Raycast(rb.position, direction, patrolHorizontalRayCastLength, groundLayer);
+            return collisionIsAhead;
         }
 
         void OnPathComplete(Path p)
@@ -112,6 +131,9 @@ namespace Enemies.Bug
             Gizmos.color = Color.red;
             Gizmos.DrawLine(rb.position, rb.position + Vector2.down * rayCastLength);
             Gizmos.DrawLine(rb.position, rb.position + direction);
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(patrolingRaycastPosition.position, patrolingRaycastPosition.position + Vector3.down * patrolHorizontalRayCastLength);
+            Gizmos.DrawLine(rb.position, rb.position + Vector2.left * patrolHorizontalRayCastLength);
         }
         
         private void OnTriggerEnter2D(Collider2D other)

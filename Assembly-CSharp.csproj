@@ -60,9 +60,9 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\CameraFollowBad.cs" />
-     <Compile Include="Assets\Scripts\Character\AirDodgeAnimationController.cs" />
      <Compile Include="Assets\Scripts\Character\Bullet.cs" />
      <Compile Include="Assets\Scripts\Character\BulletImpactEffect.cs" />
+     <Compile Include="Assets\Scripts\Character\DashAnimation.cs" />
      <Compile Include="Assets\Scripts\Character\EarthHitCharging.cs" />
      <Compile Include="Assets\Scripts\Character\EarthHitExplosion.cs" />
      <Compile Include="Assets\Scripts\Character\Explosion.cs" />
