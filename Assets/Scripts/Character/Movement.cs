@@ -14,8 +14,11 @@ namespace Character
         [SerializeField] private float moveSpeed = 10f;
         private Vector2 _direction;
         private bool _isFacingRight = true;
+        private bool _isAimingUp;
+        private bool _isAimingDown;
 
-
+        public bool IsAimingUp => _isAimingUp;
+        public bool IsAimingDown => _isAimingDown;
         public bool IsFacingRight
         {
             get => _isFacingRight;
@@ -42,6 +45,8 @@ namespace Character
 
 
         [Header("Components")] 
+        public Weapon weapon;
+        public Transform firePoint;
         [SerializeField] private GameObject earthHitExplosion;
         public GameObject earthHitChargingEffectPrefab;
         public Animator animator;
@@ -66,16 +71,9 @@ namespace Character
         public Vector3 rayCastPosition;
         public float dashLength = 2.4f;
         public Vector3 dashOffset;
-
-
-        // void Start()
-        // {
-        // }
-
+        
         void Update()
         {
-            
-
             if (onGround)
             {
                 _isAlreadyStarted = false;
@@ -87,6 +85,10 @@ namespace Character
             animator.SetBool("onGround", onGround);
             animator.SetBool("earthHitIsStarted", _earthHitIsStarted);
             animator.SetBool("earthHitIsCharging", _isAlreadyStarted);
+            animator.SetBool("aimingUp", _isAimingUp);
+            animator.SetBool("aimingDown", _isAimingDown);
+            animator.SetFloat("speed", Mathf.Abs(rb.velocity.x));
+            
 
             bool wasOnGround = onGround;
             onGround =
@@ -102,8 +104,61 @@ namespace Character
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.W) && !weapon.IsChargingAlt && onGround)
+            {
+                _isAimingDown = false;
+                firePoint.localPosition = new Vector3(0.506f, 1.631f, 0f);
+                firePoint.localRotation = Quaternion.Euler(0, 0, 45f);
+                _isAimingUp = true;
+            }
+            
+            if (Input.GetKeyDown(KeyCode.S) && !weapon.IsChargingAlt && onGround)
+            {
+                _isAimingUp = false;
+                firePoint.localPosition = new Vector3(0.55f, 0.55f, 0f);
+                firePoint.localRotation = Quaternion.Euler(0, 0, -45f);
+                _isAimingDown = true;
+            }
+            
+            if (Input.GetKeyUp(KeyCode.W) && _isAimingUp || Input.GetKeyUp(KeyCode.S) && _isAimingDown || 
+                Mathf.Abs(_direction.x) > 0 && _isAimingUp || Mathf.Abs(_direction.x) > 0 && _isAimingDown)
+            {
+                AimForward();
+            }
+
+            // if (_direction.y > 0 && _direction.x == 0 && onGround)
+            // {
+            //     firePoint.localPosition = new Vector3(0.506f, 1.631f, 0f);
+            //     firePoint.localRotation = Quaternion.Euler(0, 0, 45f);
+            //     _isAimingUp = true;
+            //    // Debug.Log("dick");
+            // }
+            //
+            // if (_direction.y < 0 && _direction.x == 0 && onGround)
+            // {
+            //     firePoint.localPosition = new Vector3(0.55f, 0.55f, 0f);
+            //     firePoint.localRotation = Quaternion.Euler(0, 0, -45f);
+            //     _isAimingDown = true;
+            //     //Debug.Log("anal");
+            //
+            // }
+            //
+            // if (!onGround || _direction.y == 0 || Mathf.Abs(_direction.x) > 0 )
+            // {
+            //     firePoint.localPosition = new Vector3(0.807f, 1.109f, 0f);
+            //     firePoint.localRotation = Quaternion.Euler(0, 0, 0);
+            //     _isAimingUp = false;
+            //     _isAimingDown = false;
+            //     //Debug.Log("balls");
+            // }
+
             if (Input.GetButtonDown("Jump"))
             {
+                if (_isAimingUp || _isAimingDown)
+                {
+                    AimForward();
+                }
+
                 _jumpTimer = Time.time + jumpDalay;
             }
 
@@ -233,6 +288,14 @@ namespace Character
                 characterHolder.transform.localScale = Vector3.Lerp(newSize, originalSize, t);
                 yield return null;
             }
+        }
+
+        void AimForward()
+        {
+            firePoint.localPosition = new Vector3(0.807f, 1.109f, 0f);
+            firePoint.localRotation = Quaternion.Euler(0, 0, 0);
+            _isAimingUp = false;
+            _isAimingDown = false;
         }
 
         void Flip()

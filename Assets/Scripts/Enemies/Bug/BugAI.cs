@@ -6,6 +6,9 @@ namespace Enemies.Bug
 {
     public class BugAI : MonoBehaviour
     {
+        public CircleCollider2D trigger;
+        public float agroTriggerRadius;
+        public float patrolTriggerRadius;
         public Transform targetForBug;
         public Transform patrolingRaycastPosition;
         private Vector2 target;
@@ -20,6 +23,7 @@ namespace Enemies.Bug
 
         [SerializeField] private Seeker seeker;
         [SerializeField] private Rigidbody2D rb;
+        public Animator animator;
 
         [SerializeField] private bool _characterIsInRange;
         private bool _corpsesIsInRange;
@@ -51,15 +55,17 @@ namespace Enemies.Bug
         void Update()
         {
             isOnGround = Physics2D.Raycast(rb.position, Vector2.down, rayCastLength, groundLayer);
+            animator.SetFloat("Vertical", rb.velocity.y);
+            animator.SetBool("IsOnGround", isOnGround);
         }
 
         void FixedUpdate()
         {
             if (!_characterIsInRange && !_corpsesIsInRange)
             {
-                bool pitIsAhead = Physics2D.Raycast(patrolingRaycastPosition.position, Vector3.down, patrolHorizontalRayCastLength, groundLayer);
+                bool pitIsAhead = Physics2D.Raycast(patrolingRaycastPosition.position, 
+                    Vector3.down, patrolHorizontalRayCastLength, groundLayer);
                 transform.Translate(Vector2.left * (patrolingSpeed * Time.deltaTime));
-                Debug.Log("hui" + pitIsAhead);
                 if (CheckCollisionAhead(_isFacingLeft? Vector2.left : Vector2.right) || !pitIsAhead)
                 {
                     Flip();
@@ -140,6 +146,7 @@ namespace Enemies.Bug
         {
             if (other.gameObject.CompareTag("Player"))
             {
+                trigger.radius = agroTriggerRadius;
                 _characterIsInRange = true;
             }
 
@@ -170,7 +177,14 @@ namespace Enemies.Bug
         {
             if (other.gameObject.CompareTag("Player"))
             {
+                trigger.radius = patrolTriggerRadius;
                 _characterIsInRange = false;
+                BugStop();
+            }
+
+            if (other.gameObject.CompareTag("Corpses"))
+            {
+                _corpsesIsInRange = false;
                 BugStop();
             }
         }
@@ -182,7 +196,7 @@ namespace Enemies.Bug
 
         public void DestroyBug()
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

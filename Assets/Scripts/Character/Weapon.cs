@@ -18,31 +18,27 @@ namespace Character
         [SerializeField] private float forceUpScale = 5f;
         public float rateOfFireAlt = 5f;
         public float chargeTimeMax = 1f;
-        public float grenadeCooldown = 5f;
+        private bool _canShootAlt = true;
+        private bool _canShoot = true;
+        private bool _isChargingAlt;
         public GameObject grenadePrefab;
         public Trajectory trajectory;
         private Vector2 _forceApplied;
-        private float _canShootGranade;
         private float _timeTilNextShotAlt;
         private float _chargeTime;
         private float _chargeForce;
 
         public float ForceScale => forceScale;
-
         public float ForceUpScale => forceUpScale;
-
         public float ChargeForce => _chargeForce;
-
-        void Start()
-        {
-            _canShootGranade = grenadeCooldown;
-        }
+        public bool IsChargingAlt => _isChargingAlt;
 
         void Update()
         {
-            _canShootGranade += Time.deltaTime;
-            if (Input.GetMouseButton(1) && _canShootGranade >= grenadeCooldown)
+            if (Input.GetMouseButton(1) && _canShootAlt && _timeTilNextShotAlt < Time.time && !movement.IsAimingUp && !movement.IsAimingDown)
             {
+                _isChargingAlt = true;
+                _canShoot = false;
                 if (_chargeTime < chargeTimeMax)
                 {
                     _chargeTime += Time.deltaTime;   
@@ -55,20 +51,27 @@ namespace Character
             }
         
 
-            if (Input.GetMouseButtonUp(1) && _timeTilNextShotAlt < Time.time)
+            if (Input.GetMouseButtonUp(1) && _canShootAlt && _timeTilNextShotAlt < Time.time && !movement.IsAimingUp && !movement.IsAimingDown)
             {
+                _isChargingAlt = false;
+                _canShoot = true;
                 _chargeForce = _chargeTime;
                 ShootAlternative();
                 _chargeTime = 0;
                 _timeTilNextShotAlt = Time.time + rateOfFireAlt;
                 trajectory.Hide();
-                _canShootGranade = 0;
             }
 
-            if (Input.GetButton("Fire1") && _timeTilNextShot < Time.time)
+            if (Input.GetButton("Fire1") && _canShoot && _timeTilNextShot < Time.time)
             {
+                _canShootAlt = false;
                 Shoot();
                 _timeTilNextShot = Time.time + rateOfFire;
+            }
+
+            if (Input.GetButtonUp("Fire1") && _canShoot)
+            {
+                _canShootAlt = true;
             }
         }
 
@@ -86,6 +89,5 @@ namespace Character
         {
             Instantiate(prefab, firePoint.position, firePoint.rotation);
         }
-
     }
 }
