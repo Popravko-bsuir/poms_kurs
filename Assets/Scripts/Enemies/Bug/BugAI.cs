@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Pathfinding;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace Enemies.Bug
 {
     public class BugAI : MonoBehaviour
     {
+        public Transform crushEffectTransform;
+        public ParticleSystem crushEffectParticleSystem;
         public CircleCollider2D trigger;
         public float agroTriggerRadius;
         public float patrolTriggerRadius;
@@ -16,6 +19,9 @@ namespace Enemies.Bug
         [SerializeField] private float patrolingSpeed;
         public float nextWayPoyntDistance = 1f;
         public Vector2 direction;
+        public Vector2 pathStartPointOffset;
+        [SerializeField] private Vector2 checkGroundRaycastOffset;
+        [SerializeField] private Vector2 checkCharacterRaycastOffset;
 
         private Path _path;
         private int _currentWaypoynt;
@@ -26,18 +32,23 @@ namespace Enemies.Bug
         public Animator animator;
 
         [SerializeField] private bool _characterIsInRange;
+        private bool _characterIsAbove;
         private bool _corpsesIsInRange;
         
         private bool _isFacingLeft = true;
+        
+        public bool IsFacingLeft => _isFacingLeft;
 
         [SerializeField] private float jumpForce = 50f;
-
+        [SerializeField] private float maxSpeed = 15;
+        
         private const float RateOfJumping = 1f;
         [SerializeField] private float _jumpTimer;
         public bool isOnGround;
         [SerializeField] private float rayCastLength;
         [SerializeField] private float patrolHorizontalRayCastLength;
         public LayerMask groundLayer;
+        public LayerMask characterLayer;
 
         void Start()
         {
@@ -54,9 +65,20 @@ namespace Enemies.Bug
 
         void Update()
         {
-            isOnGround = Physics2D.Raycast(rb.position, Vector2.down, rayCastLength, groundLayer);
+            isOnGround = Physics2D.Raycast(rb.position + checkGroundRaycastOffset,
+                Vector2.down, rayCastLength, groundLayer) ||
+            Physics2D.Raycast(rb.position - checkGroundRaycastOffset, Vector2.down, rayCastLength, groundLayer);
+            _characterIsAbove = Physics2D.Raycast(rb.position + checkCharacterRaycastOffset,
+                                    Vector2.up, rayCastLength, characterLayer) ||
+            Physics2D.Raycast(rb.position - checkCharacterRaycastOffset, Vector2.up, rayCastLength, characterLayer);
+            
             animator.SetFloat("Vertical", rb.velocity.y);
             animator.SetBool("IsOnGround", isOnGround);
+
+            if (isOnGround && _characterIsAbove)
+            {
+                CrushingEffect();
+            }
         }
 
         void FixedUpdate()
@@ -103,10 +125,15 @@ namespace Enemies.Bug
                     _currentWaypoynt++;
                 }
 
-                if (direction.x < 0 && !_isFacingLeft || direction.x > 0 && _isFacingLeft)
+                if (rb.velocity.x < 0 && !_isFacingLeft || rb.velocity.x > 0 && _isFacingLeft)
                 {
                     Flip();
                 }
+            }
+            
+            if (Mathf.Abs(rb.velocity.x) > maxSpeed)
+            {
+                rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
             }
         }
 
@@ -135,7 +162,10 @@ namespace Enemies.Bug
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(rb.position, rb.position + Vector2.down * rayCastLength);
+            Gizmos.DrawLine(rb.position + checkGroundRaycastOffset, rb.position + checkGroundRaycastOffset + Vector2.down * rayCastLength);
+            Gizmos.DrawLine(rb.position - checkGroundRaycastOffset, rb.position - checkGroundRaycastOffset + Vector2.down * rayCastLength);
+            Gizmos.DrawLine(rb.position + checkCharacterRaycastOffset, rb.position + checkCharacterRaycastOffset + Vector2.up * rayCastLength);
+            Gizmos.DrawLine(rb.position - checkCharacterRaycastOffset, rb.position - checkCharacterRaycastOffset + Vector2.up * rayCastLength);
             Gizmos.DrawLine(rb.position, rb.position + direction);
             Gizmos.color = Color.green;
             Gizmos.DrawLine(patrolingRaycastPosition.position, patrolingRaycastPosition.position + Vector3.down * patrolHorizontalRayCastLength);
@@ -197,6 +227,13 @@ namespace Enemies.Bug
         public void DestroyBug()
         {
             gameObject.SetActive(false);
+        }
+
+        public void CrushingEffect()
+        {
+            crushEffectTransform.parent = null;
+            crushEffectParticleSystem.Play(false);
+            DestroyBug();
         }
     }
 }

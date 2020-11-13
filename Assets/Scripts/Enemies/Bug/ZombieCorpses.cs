@@ -40,6 +40,7 @@ namespace Enemies.Bug
 
         private IEnumerator Swelling()
         {
+            trigger.enabled = false;
             _swellingIsStarted = true;
             bugSpriteRanderer.enabled = true;
             bloodSquirt.Play();

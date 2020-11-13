@@ -35,20 +35,20 @@ namespace Character
         [SerializeField] private float dashMagnitude = 20f;
 
         [SerializeField] private float dashTime = 0.2f;
-        [SerializeField] private float earthHitJumpForce = 20f;
-        [SerializeField] private float earthHitChargeTime = 0.2f;
-        [SerializeField] private float earthHitChargeForce = 20f;
+        [SerializeField] private float superJumpForce = 20f;
+        [SerializeField] private float superChargeTime = 0.2f;
+        [SerializeField] private float superChargeForce = 20f;
         private bool _isCollisionAhead;
         private bool _canDodge;
-        private bool _earthHitIsStarted;
+        private bool _superIsStarted;
         private bool _isAlreadyStarted;
 
 
         [Header("Components")] 
         public Weapon weapon;
         public Transform firePoint;
-        [SerializeField] private GameObject earthHitExplosion;
-        public GameObject earthHitChargingEffectPrefab;
+        public GameObject superExplosion;
+        public GameObject superChargingEffectPrefab;
         public Animator animator;
         public Rigidbody2D rb;
         public LayerMask groundLayer;
@@ -83,8 +83,8 @@ namespace Character
             animator.SetFloat("horizontal", Mathf.Abs(Input.GetAxis("Horizontal")));
             animator.SetFloat("vertical", rb.velocity.y);
             animator.SetBool("onGround", onGround);
-            animator.SetBool("earthHitIsStarted", _earthHitIsStarted);
-            animator.SetBool("earthHitIsCharging", _isAlreadyStarted);
+            animator.SetBool("superIsStarted", _superIsStarted);
+            animator.SetBool("superIsCharging", _isAlreadyStarted);
             animator.SetBool("aimingUp", _isAimingUp);
             animator.SetBool("aimingDown", _isAimingDown);
             animator.SetFloat("speed", Mathf.Abs(rb.velocity.x));
@@ -100,7 +100,7 @@ namespace Character
                 StartCoroutine(JumpSqueeze(1.2f, 0.8f, 0.1f));
                 if (_isAlreadyStarted)
                 {
-                    Instantiate(earthHitExplosion, transform.position, transform.rotation);
+                    Instantiate(superExplosion, transform.position, transform.rotation);
                 }
             }
 
@@ -162,9 +162,9 @@ namespace Character
                 _jumpTimer = Time.time + jumpDalay;
             }
 
-            if (Input.GetButtonDown("EarthHit") && !onGround && !_earthHitIsStarted)
+            if (Input.GetButtonDown("EarthHit") && !onGround && !_superIsStarted)
             {
-                _earthHitIsStarted = true;
+                _superIsStarted = true;
                 EarthHitPreparation();
             }
 
@@ -227,7 +227,7 @@ namespace Character
                 rb.gravityScale = gravity;
                 rb.drag = linearDrag * 0.15f;
                 
-                if (_earthHitIsStarted && !onGround && !_isAlreadyStarted && Math.Abs(rb.velocity.y) < 0.3f)
+                if (_superIsStarted && !onGround && !_isAlreadyStarted && Math.Abs(rb.velocity.y) < 0.3f)
                 {
                     _isAlreadyStarted = true;
                     StartCoroutine(EarthHitCharging());
@@ -248,11 +248,7 @@ namespace Character
 
             }
         }
-
-        private void CheckAirtime()
-        {
-        }
-
+        
         private void MoveCharacter(float horizontal)
         {
             rb.AddForce(Vector2.right * (horizontal * moveSpeed));
@@ -343,21 +339,21 @@ namespace Character
 
         private void EarthHitPreparation()
         {
-            rb.AddForce(Vector2.up * (Math.Abs(rb.velocity.y) + earthHitJumpForce), ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * (Math.Abs(rb.velocity.y) + superJumpForce), ForceMode2D.Impulse);
         }
 
         private IEnumerator EarthHitCharging()
         {
-            _earthHitIsStarted = false;
+            _superIsStarted = false;
             rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
-            yield return new WaitForSeconds(earthHitChargeTime);
+            yield return new WaitForSeconds(superChargeTime);
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-            rb.AddForce(Vector2.down * earthHitChargeForce, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.down * superChargeForce, ForceMode2D.Impulse);
         }
 
         private void ShowChargingEffect()
         {
-            Instantiate(earthHitChargingEffectPrefab, transform.position, transform.rotation);
+            Instantiate(superChargingEffectPrefab, transform.position, transform.rotation);
         }
     }
 }

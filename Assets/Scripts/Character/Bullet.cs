@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Enemies.Bug;
+using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
@@ -13,16 +14,15 @@ public class Bullet : MonoBehaviour
         rb.velocity = transform.right * speed;
     }
 
-    void Update()
-    {
-    }
+    
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.CompareTag("Obstacle") || col.gameObject.CompareTag("Enemie"))
+        if (col.gameObject.CompareTag("EnemieBug"))
         {
+            col.GetComponentInParent<BugAI>().CrushingEffect();
             Instantiate(impactEffect, transform.position, transform.rotation);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }
