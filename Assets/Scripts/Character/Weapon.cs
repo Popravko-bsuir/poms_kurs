@@ -87,6 +87,7 @@ namespace Character
 
         private void Prefab(GameObject prefab)
         {
+            //TODO: Object Pulling
             Instantiate(prefab, firePoint.position, firePoint.rotation);
         }
     }

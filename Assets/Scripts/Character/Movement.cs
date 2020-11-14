@@ -171,18 +171,18 @@ namespace Character
             if (Input.GetButtonDown("AirDodge") && !onGround && _canDodge)
             {
                 StartCoroutine(dashAnimation.ShowDashAnimation(dashTime));
-                CheckCollisionAhead(_isFacingRight ? Vector2.right : Vector2.left);
+                CheckCollisionAhead();
                 if((_direction.x > 0 && rb.velocity.x < 0) || (_direction.x < 0 && rb.velocity.x > 0))
                 {
-                    AirDodgeBackvard(_isFacingRight ? Vector2.right : Vector2.left);
+                    AirDodgeBackvard();
                 }
                 if (_isCollisionAhead)
                 {
-                    AirDodgeBackvard(_isFacingRight ? Vector2.right : Vector2.left);
+                    AirDodgeBackvard();
                 }
                 else
                 {
-                    StartCoroutine(AirDodgeForvard(_isFacingRight ? Vector2.right : Vector2.left));
+                    StartCoroutine(AirDodgeForvard());
                 }
 
                 _isCollisionAhead = false;
@@ -314,27 +314,27 @@ namespace Character
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position + colliderOffset, transform.position + colliderOffset + Vector3.down * groundLength);
             Gizmos.DrawLine(transform.position - colliderOffset, transform.position - colliderOffset + Vector3.down * groundLength);
-            Gizmos.DrawLine((transform.position + rayCastPosition) + dashOffset, (transform.position + rayCastPosition) + dashOffset + Vector3.right * dashLength);
-            Gizmos.DrawLine((transform.position + rayCastPosition) - dashOffset, (transform.position + rayCastPosition) - dashOffset + Vector3.right * dashLength);
+            Gizmos.DrawLine((transform.position + rayCastPosition) + dashOffset, (transform.position + rayCastPosition) + dashOffset + transform.right * dashLength);
+            Gizmos.DrawLine((transform.position + rayCastPosition) - dashOffset, (transform.position + rayCastPosition) - dashOffset + transform.right * dashLength);
         }
 
-        private IEnumerator AirDodgeForvard(Vector2 direction)
+        private IEnumerator AirDodgeForvard()
         {
-            rb.AddForce(direction * dashMagnitude, ForceMode2D.Impulse);
+            rb.AddForce(transform.right * dashMagnitude, ForceMode2D.Impulse);
             yield return new WaitForSeconds(dashTime); 
-            rb.AddForce(direction * ((dashMagnitude - 5) * (-1)), ForceMode2D.Impulse);
+            rb.AddForce(transform.right * ((dashMagnitude - 5) * (-1)), ForceMode2D.Impulse);
         }
 
-        private void AirDodgeBackvard(Vector2 direction)
+        private void AirDodgeBackvard()
         {
-            rb.AddForce(direction * dashMagnitude, ForceMode2D.Impulse);
+            rb.AddForce(transform.right * dashMagnitude, ForceMode2D.Impulse);
         }
 
-        private void CheckCollisionAhead(Vector2 direction)
+        private void CheckCollisionAhead()
         {
             _isCollisionAhead = 
-                Physics2D.Raycast((transform.position + rayCastPosition) + dashOffset, direction, dashLength, groundLayer) || 
-                Physics2D.Raycast((transform.position + rayCastPosition) - dashOffset, direction, dashLength, groundLayer);
+                Physics2D.Raycast((transform.position + rayCastPosition) + dashOffset, transform.right, dashLength, groundLayer) || 
+                Physics2D.Raycast((transform.position + rayCastPosition) - dashOffset, transform.right, dashLength, groundLayer);
         }
 
         private void EarthHitPreparation()

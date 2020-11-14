@@ -9,25 +9,25 @@ namespace Character
         private Movement _movement;
         public Rigidbody2D rb;
         public GameObject explosionEffect;
-        // [SerializeField] private float forceScale = 10f;
-        // [SerializeField] private float forceUpScale = 5f;
         public float explosionTimer;
         public float explosionTime = 5f;
-
-        // public float ForceScale => forceScale;
-        //
-        // public float ForceUpScale => forceUpScale;
-
+        
         void Start()
         {
             _movement = FindObjectOfType<Movement>();
             _weapon = FindObjectOfType<Weapon>();
-            Throw(_movement.IsFacingRight ? Vector2.right : Vector2.left);
+            //Throw(_movement.IsFacingRight ? Vector2.right : Vector2.left);
+            Throw2();
         }
 
-        private void Throw(Vector2 direction)
+        // private void Throw(Vector2 direction)
+        // {
+        //     rb.AddForce(direction * ((_weapon.ChargeForce * _weapon.ForceScale) + Math.Abs(_movement.rb.velocity.x)), ForceMode2D.Impulse);
+        //     rb.AddForce(Vector2.up * ((_weapon.ChargeForce * _weapon.ForceUpScale) + _movement.rb.velocity.y),ForceMode2D.Impulse);
+        // }   
+        private void Throw2()
         {
-            rb.AddForce(direction * ((_weapon.ChargeForce * _weapon.ForceScale) + Math.Abs(_movement.rb.velocity.x)), ForceMode2D.Impulse);
+            rb.AddForce(transform.right * ((_weapon.ChargeForce * _weapon.ForceScale) + Math.Abs(_movement.rb.velocity.x)), ForceMode2D.Impulse);
             rb.AddForce(Vector2.up * ((_weapon.ChargeForce * _weapon.ForceUpScale) + _movement.rb.velocity.y),ForceMode2D.Impulse);
         }
 

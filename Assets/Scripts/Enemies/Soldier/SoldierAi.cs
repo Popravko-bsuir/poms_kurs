@@ -10,8 +10,9 @@ public class SoldierAi : MonoBehaviour
     [SerializeField] private float raycastLength;
     public LayerMask groundLayer;
     private bool _obstacleIsAhead;
-    private bool _isFacingRight;
-    private bool _targetIsInRange;
+    private bool _isFacingRight = true;
+    public bool _targetIsInRange;
+    [SerializeField] private float speed;
     void Start()
     {
         
@@ -19,14 +20,26 @@ public class SoldierAi : MonoBehaviour
 
     void Update()
     {
-        rb.velocity = new Vector2(_isFacingRight? 10 : -10, rb.velocity.y);
-        if (!Physics2D.Raycast(firePoint.position, Vector2.down, raycastLength, groundLayer))
+        if (!_targetIsInRange)  // patrolling
         {
-            Flip();
+            if (!Physics2D.Raycast(firePoint.position, Vector2.down, raycastLength, groundLayer))
+            {
+                Flip();
+            }
+            
+            rb.velocity = new Vector2(_isFacingRight ? speed : (-1) * speed, rb.velocity.y);
+
         }
-
-
+        
     }
+
+    // private IEnumerator Patrolling()
+    // {
+    //     while (!_targetIsInRange)
+    //     {
+    //         
+    //     }
+    // }
 
     private void Flip()
     {
