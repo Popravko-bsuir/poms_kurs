@@ -112,7 +112,7 @@ namespace Enemies.Bug
                 }
                 
                 direction = ((Vector2) _path.vectorPath[_currentWaypoynt] - rb.position).normalized;
-                rb.AddForce(Vector2.right * (direction.x * speed * Time.deltaTime));
+                rb.AddForce(Vector2.right * (direction.x * speed /** Time.deltaTime*/));
                 if (direction.y > 0.7f && isOnGround && _jumpTimer < Time.time)
                 {
                     rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);

@@ -137,3 +137,4 @@ MonoBehaviour:
   impactEffect: {fileID: 6203511561213069918, guid: da03285674b996b42807e41ddb51d8f1,
     type: 3}
   speed: 20
+  bulletLifeTime: 3

@@ -5,8 +5,8 @@ namespace Character
 {
     public class Grenade : MonoBehaviour
     {
-        private Weapon _weapon;
-        private Movement _movement;
+        public Weapon _weapon;
+        public Movement _movement;
         public Rigidbody2D rb;
         public GameObject explosionEffect;
         public float explosionTimer;
@@ -14,8 +14,8 @@ namespace Character
         
         void Start()
         {
-            _movement = FindObjectOfType<Movement>();
-            _weapon = FindObjectOfType<Weapon>();
+            //_movement = FindObjectOfType<Movement>();
+            //_weapon = FindObjectOfType<Weapon>();
             //Throw(_movement.IsFacingRight ? Vector2.right : Vector2.left);
             Throw2();
         }
@@ -39,6 +39,15 @@ namespace Character
                 Instantiate(explosionEffect,transform.position, transform.rotation);
                 Destroy(gameObject);
             }
+        }
+
+        public void SetMovement(Movement movement)
+        {
+            _movement = movement;
+        }
+        public void SetWeapon(Weapon weapon)
+        {
+            _weapon = weapon;
         }
     }
 }

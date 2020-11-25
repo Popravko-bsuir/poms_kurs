@@ -1,4 +1,5 @@
-﻿using Enemies.Bug;
+﻿using System;
+using Enemies.Bug;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -7,14 +8,25 @@ public class Bullet : MonoBehaviour
 
     public GameObject impactEffect;
     public float speed = 20f;
+    [SerializeField] private float bulletLifeTime;
+    private float _time;
 
     void Start()
     {
-        Destroy(gameObject, 3f);
-        rb.velocity = transform.right * speed;
+        //Destroy(gameObject, 3f);
+        //rb.velocity = transform.right * speed;
     }
 
-    
+    private void Update()
+    {
+        rb.velocity = transform.right * speed;
+        _time += Time.deltaTime;
+        if (_time > bulletLifeTime)
+        {
+            _time = 0;
+            gameObject.SetActive(false);
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
@@ -24,5 +36,12 @@ public class Bullet : MonoBehaviour
             Instantiate(impactEffect, transform.position, transform.rotation);
             gameObject.SetActive(false);
         }
+
+        // if (col.gameObject.CompareTag("Player"))
+        // {
+        //     col.gameObject.GetComponent<HealthPoints>().TakeDamage(10);
+        //     Instantiate(impactEffect, transform.position, transform.rotation);
+        //     gameObject.SetActive(false);
+        // }
     }
 }

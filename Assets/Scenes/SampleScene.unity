@@ -240,6 +240,7 @@ GameObject:
   - component: {fileID: 27303530}
   - component: {fileID: 27303532}
   - component: {fileID: 27303531}
+  - component: {fileID: 27303533}
   m_Layer: 11
   m_Name: Animation
   m_TagString: Enemie
@@ -315,8 +316,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 35c708a1f92352f41b4f7483d13b7f76, type: 3}
+  m_SortingOrder: 23
+  m_Sprite: {fileID: 21300000, guid: 06805af6da4f0eb4a81430c4beb29307, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -327,6 +328,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &27303533
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27303529}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ae5f4eee58cd8c84fb8d22e88ea001a4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &60668868
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff697a88b5f447448953525820d62caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthPoints: 202
+  healthPoints: 1286
 --- !u!1 &379701491
 GameObject:
   m_ObjectHideFlags: 0
@@ -1251,7 +1271,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542193275}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.858, y: 0.433, z: 0}
+  m_LocalPosition: {x: 0.956, y: -0.275, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1113032282}
@@ -2253,9 +2273,10 @@ GameObject:
   - component: {fileID: 1113032282}
   - component: {fileID: 1113032281}
   - component: {fileID: 1113032283}
-  m_Layer: 0
+  - component: {fileID: 1113032284}
+  m_Layer: 12
   m_Name: Soldier
-  m_TagString: Untagged
+  m_TagString: EnemieSite
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2272,12 +2293,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9a28f28a156bee4b89df040e4b04bea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 27303533}
+  bulletPrefab: {fileID: 1683311468739254263, guid: 3fba8304c1cdce348b325becde5cb913,
+    type: 3}
+  trigger: {fileID: 1113032284}
   rb: {fileID: 1113032283}
   firePoint: {fileID: 542193276}
+  rayCastPosition: {fileID: 1441252625}
   raycastLength: 2.09
   groundLayer:
     serializedVersion: 2
     m_Bits: 768
+  _targetIsInRange: 0
+  patrollingTriggerRadius: 10
+  agroTriggerRadius: 20
+  speed: 3.31
+  _targetDirection: {x: 0, y: 0, z: 0}
+  shakeMaxAngle: 30
 --- !u!4 &1113032282
 Transform:
   m_ObjectHideFlags: 0
@@ -2286,11 +2318,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113032280}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 59.69, y: 2.33, z: 0}
+  m_LocalPosition: {x: 51.24, y: 0.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 27303530}
   - {fileID: 542193276}
+  - {fileID: 1441252625}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2315,6 +2348,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!58 &1113032284
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1113032280}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 10
 --- !u!1 &1134951737
 GameObject:
   m_ObjectHideFlags: 0
@@ -3031,6 +3080,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 497826369}
   m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1441252624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1441252625}
+  m_Layer: 0
+  m_Name: RayCastPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1441252625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441252624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.4, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1113032282}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1648423980
 GameObject:
@@ -4383,6 +4462,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
+      propertyPath: onBulletLaunch.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 1683311468739254263, guid: 3fba8304c1cdce348b325becde5cb913,
@@ -4423,6 +4507,37 @@ PrefabInstance:
       propertyPath: movement
       value: 
       objectReference: {fileID: 1732516796}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: numberOfBullets
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: onBulletLaunch.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: onBulletLaunch.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: onBulletLaunch.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4527263733275322784, guid: 3fba8304c1cdce348b325becde5cb913,
+        type: 3}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: onBulletLaunch.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetVelocity
+      objectReference: {fileID: 0}
+    - target: {fileID: 663761764507758497, guid: 4d082c9ca1524374ca47ad6354dfc645,
+        type: 3}
+      propertyPath: onBulletLaunch.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5607969657829666945, guid: 4d082c9ca1524374ca47ad6354dfc645,
         type: 3}
       propertyPath: m_Controller

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Character
 {
@@ -7,8 +8,11 @@ namespace Character
     {
         public Transform firePoint;
         public Movement movement;
-        
-        [Header("Fire")]
+
+        [Header("Fire")] 
+        private int _bulletNumber;
+        private GameObject[] _bulletList;
+        [SerializeField] private int numberOfBullets;
         public float rateOfFire = 0.5f;
         private float _timeTilNextShot;
         public GameObject bulletPrefab;
@@ -27,11 +31,21 @@ namespace Character
         private float _timeTilNextShotAlt;
         private float _chargeTime;
         private float _chargeForce;
+        private Grenade _grenadeScript;
 
         public float ForceScale => forceScale;
         public float ForceUpScale => forceUpScale;
         public float ChargeForce => _chargeForce;
         public bool IsChargingAlt => _isChargingAlt;
+
+
+        private void Start()
+        {
+            PrepareBullets();
+            _grenadeScript = grenadePrefab.GetComponent<Grenade>();
+            _grenadeScript.SetMovement(movement);
+            _grenadeScript.SetWeapon(this);
+        }
 
         void Update()
         {
@@ -82,13 +96,30 @@ namespace Character
 
         void Shoot()
         {
-            Prefab(bulletPrefab);
+            var firePointTransform = firePoint.transform;
+            _bulletList[_bulletNumber].transform.position =  firePointTransform.position;
+            _bulletList[_bulletNumber].transform.rotation = firePointTransform.rotation;
+            _bulletList[_bulletNumber].SetActive(true);
+            _bulletNumber++;
+            if (_bulletNumber == numberOfBullets)
+            {
+                _bulletNumber = 0;
+            }
         }
 
         private void Prefab(GameObject prefab)
         {
-            //TODO: Object Pulling
             Instantiate(prefab, firePoint.position, firePoint.rotation);
+        }
+
+        private void PrepareBullets()
+        {
+            _bulletList = new GameObject[numberOfBullets];
+            for (int i = 0; i < numberOfBullets; i++)
+            {
+                _bulletList[i] = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+                _bulletList[i].SetActive(false);
+            }
         }
     }
 }

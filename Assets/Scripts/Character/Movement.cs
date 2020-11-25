@@ -71,7 +71,13 @@ namespace Character
         public Vector3 rayCastPosition;
         public float dashLength = 2.4f;
         public Vector3 dashOffset;
-        
+
+
+        // public Weapon Weapon
+        // {
+        //     get => weapon;
+        //     set => weapon = value;
+        // }
         void Update()
         {
             if (onGround)
