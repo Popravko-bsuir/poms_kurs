@@ -4930,7 +4930,7 @@ GameObject:
   - component: {fileID: 3556592329017541645}
   - component: {fileID: 3556592329017541643}
   - component: {fileID: 3556592329017541642}
-  m_Layer: 11
+  m_Layer: 14
   m_Name: Bug
   m_TagString: EnemieBug
   m_Icon: {fileID: 0}
@@ -9876,6 +9876,7 @@ Transform:
   - {fileID: 3556592329694950841}
   - {fileID: 3556592329823083207}
   - {fileID: 3556592328698175068}
+  - {fileID: 6374380376094564741}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9891,6 +9892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc5bdfd8f84954f488f1bab14d6f38e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPoint: {fileID: 6374380376094564741}
   crushEffectTransform: {fileID: 3556592329823083207}
   crushEffectParticleSystem: {fileID: 3556592329517519177}
   trigger: {fileID: 3556592329794268922}
@@ -9898,9 +9900,9 @@ MonoBehaviour:
   patrolTriggerRadius: 10
   targetForBug: {fileID: 0}
   patrolingRaycastPosition: {fileID: 3556592329694950841}
-  speed: 400
+  speed: 20
   patrolingSpeed: 5.5
-  nextWayPoyntDistance: 2.13
+  nextWayPoyntDistance: 2.05
   direction: {x: 0, y: 0}
   pathStartPointOffset: {x: 0, y: 0}
   checkGroundRaycastOffset: {x: 0.37, y: 0}
@@ -10118,3 +10120,33 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &8109496174687558254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6374380376094564741}
+  m_Layer: 12
+  m_Name: StartPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6374380376094564741
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8109496174687558254}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.05, y: 1.15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3556592329794268918}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

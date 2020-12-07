@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Character
 {
@@ -8,8 +7,10 @@ namespace Character
     {
         public Transform firePoint;
         public Movement movement;
+        [SerializeField] private int ammo;
 
         [Header("Fire")] 
+        [SerializeField] private int layerOfEnemyToDamage;
         private int _bulletNumber;
         private GameObject[] _bulletList;
         [SerializeField] private int numberOfBullets;
@@ -51,21 +52,29 @@ namespace Character
         {
             if (Input.GetMouseButton(1) && _canShootAlt && _timeTilNextShotAlt < Time.time && !movement.IsAimingUp && !movement.IsAimingDown)
             {
-                _isChargingAlt = true;
-                _canShoot = false;
-                if (_chargeTime < chargeTimeMax)
+                if (ammo > 10)
                 {
-                    _chargeTime += Time.deltaTime;   
+                    _isChargingAlt = true;
+                    _canShoot = false;
+                    if (_chargeTime < chargeTimeMax)
+                    {
+                        _chargeTime += Time.deltaTime;
+                    }
+
+                    trajectory.Show();
+                    _forceApplied = new Vector2((_chargeTime * forceScale) + Math.Abs(movement.rb.velocity.x),
+                        (_chargeTime * forceUpScale) + movement.rb.velocity.y);
+                    trajectory.UpdateDots(transform.position, _forceApplied);
                 }
-                
-                trajectory.Show(); 
-                _forceApplied = new Vector2((_chargeTime * forceScale) + Math.Abs(movement.rb.velocity.x),
-                    (_chargeTime * forceUpScale) + movement.rb.velocity.y);
-                trajectory.UpdateDots(transform.position, _forceApplied);
+                else
+                {
+                    Debug.Log("no ammo");
+                }
             }
         
 
-            if (Input.GetMouseButtonUp(1) && _canShootAlt && _timeTilNextShotAlt < Time.time && !movement.IsAimingUp && !movement.IsAimingDown)
+            if (Input.GetMouseButtonUp(1) && _canShootAlt && _timeTilNextShotAlt < Time.time && 
+                !movement.IsAimingUp && !movement.IsAimingDown && ammo > 10)
             {
                 _isChargingAlt = false;
                 _canShoot = true;
@@ -74,19 +83,34 @@ namespace Character
                 _chargeTime = 0;
                 _timeTilNextShotAlt = Time.time + rateOfFireAlt;
                 trajectory.Hide();
+                ammo -= 10;
             }
 
             if (Input.GetButton("Fire1") && _canShoot && _timeTilNextShot < Time.time)
             {
                 _canShootAlt = false;
-                Shoot();
                 _timeTilNextShot = Time.time + rateOfFire;
+                if (ammo > 0)
+                {
+                    Shoot();
+                    ammo--;
+                }
+                else
+                {
+                    //play sound
+                    Debug.Log("no ammo");
+                }
             }
 
             if (Input.GetButtonUp("Fire1") && _canShoot)
             {
                 _canShootAlt = true;
             }
+        }
+
+        public void AddAmmo(int ammoToAdd)
+        {
+            ammo += ammoToAdd;
         }
 
         void ShootAlternative()
@@ -118,6 +142,7 @@ namespace Character
             for (int i = 0; i < numberOfBullets; i++)
             {
                 _bulletList[i] = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+                _bulletList[i].GetComponent<Bullet>().SetEnemyToDamage(layerOfEnemyToDamage); 
                 _bulletList[i].SetActive(false);
             }
         }

@@ -11,6 +11,7 @@ TagManager:
   - Corpses
   - EnemieBug
   - Bullet
+  - Generator
   layers:
   - Default
   - TransparentFX
@@ -26,8 +27,8 @@ TagManager:
   - Enemie
   - EnemieSite
   - Bullet
-  - 
-  - 
+  - EnemieBug
+  - Generator
   - 
   - 
   - 

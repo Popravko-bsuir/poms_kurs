@@ -60,12 +60,15 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\CameraFollowBad.cs" />
+     <Compile Include="Assets\Scripts\Character\Ammo.cs" />
      <Compile Include="Assets\Scripts\Character\Bullet.cs" />
      <Compile Include="Assets\Scripts\Character\BulletImpactEffect.cs" />
      <Compile Include="Assets\Scripts\Character\DashAnimation.cs" />
      <Compile Include="Assets\Scripts\Character\Explosion.cs" />
+     <Compile Include="Assets\Scripts\Character\FirstAid.cs" />
      <Compile Include="Assets\Scripts\Character\Grenade.cs" />
      <Compile Include="Assets\Scripts\Character\HealthPoints.cs" />
+     <Compile Include="Assets\Scripts\Character\Levetating.cs" />
      <Compile Include="Assets\Scripts\Character\Movement.cs" />
      <Compile Include="Assets\Scripts\Character\SuperCharging.cs" />
      <Compile Include="Assets\Scripts\Character\SuperExplosion.cs" />
@@ -76,6 +79,7 @@
      <Compile Include="Assets\Scripts\Enemies\Bug\IgnoreCollision.cs" />
      <Compile Include="Assets\Scripts\Enemies\Bug\ZombieCorpses.cs" />
      <Compile Include="Assets\Scripts\Enemies\Soldier\SoldierAi.cs" />
+     <Compile Include="Assets\Scripts\Environment\Generator.cs" />
      <Compile Include="Assets\Scripts\FpsCounter.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/slllike/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

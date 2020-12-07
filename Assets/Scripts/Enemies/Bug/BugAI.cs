@@ -7,6 +7,7 @@ namespace Enemies.Bug
 {
     public class BugAI : MonoBehaviour
     {
+        public Transform startPoint;
         public Transform crushEffectTransform;
         public ParticleSystem crushEffectParticleSystem;
         public CircleCollider2D trigger;
@@ -42,7 +43,7 @@ namespace Enemies.Bug
         [SerializeField] private float jumpForce = 50f;
         [SerializeField] private float maxSpeed = 15;
         
-        private const float RateOfJumping = 1f;
+        private const float RateOfJumping = 3f;
         [SerializeField] private float _jumpTimer;
         public bool isOnGround;
         [SerializeField] private float rayCastLength;
@@ -59,7 +60,7 @@ namespace Enemies.Bug
         {
             if (_characterIsInRange && seeker.IsDone() || _corpsesIsInRange && seeker.IsDone())
             {
-                seeker.StartPath(rb.position, target, OnPathComplete);
+                seeker.StartPath((Vector2)startPoint.position, target, OnPathComplete);
             }
         }
 
@@ -88,7 +89,7 @@ namespace Enemies.Bug
                 bool pitIsAhead = Physics2D.Raycast(patrolingRaycastPosition.position, 
                     Vector3.down, patrolHorizontalRayCastLength, groundLayer);
                 transform.Translate(Vector2.left * (patrolingSpeed * Time.deltaTime));
-                if (CheckCollisionAhead(_isFacingLeft? Vector2.left : Vector2.right) || !pitIsAhead)
+                if (CheckCollisionAhead(_isFacingLeft? Vector2.left : Vector2.right) && isOnGround || !pitIsAhead && isOnGround)
                 {
                     Flip();
                 }
@@ -111,7 +112,7 @@ namespace Enemies.Bug
                     _isReachedEndOfPath = false;
                 }
                 
-                direction = ((Vector2) _path.vectorPath[_currentWaypoynt] - rb.position).normalized;
+                direction = ((Vector2) _path.vectorPath[_currentWaypoynt] - (Vector2)startPoint.position).normalized;
                 rb.AddForce(Vector2.right * (direction.x * speed /** Time.deltaTime*/));
                 if (direction.y > 0.7f && isOnGround && _jumpTimer < Time.time)
                 {
@@ -119,7 +120,7 @@ namespace Enemies.Bug
                     _jumpTimer = RateOfJumping + Time.time;
                 }
 
-                float distance = Vector2.Distance(rb.position, _path.vectorPath[_currentWaypoynt]);
+                float distance = Vector2.Distance(startPoint.position, _path.vectorPath[_currentWaypoynt]);
                 if (distance < nextWayPoyntDistance)
                 {
                     _currentWaypoynt++;
@@ -166,7 +167,8 @@ namespace Enemies.Bug
             Gizmos.DrawLine(rb.position - checkGroundRaycastOffset, rb.position - checkGroundRaycastOffset + Vector2.down * rayCastLength);
             Gizmos.DrawLine(rb.position + checkCharacterRaycastOffset, rb.position + checkCharacterRaycastOffset + Vector2.up * rayCastLength);
             Gizmos.DrawLine(rb.position - checkCharacterRaycastOffset, rb.position - checkCharacterRaycastOffset + Vector2.up * rayCastLength);
-            Gizmos.DrawLine(rb.position, rb.position + direction);
+            var position = (Vector2)startPoint.position;
+            Gizmos.DrawLine(position, position + direction);
             Gizmos.color = Color.green;
             Gizmos.DrawLine(patrolingRaycastPosition.position, patrolingRaycastPosition.position + Vector3.down * patrolHorizontalRayCastLength);
             Gizmos.DrawLine(rb.position, rb.position + Vector2.left * patrolHorizontalRayCastLength);
@@ -221,7 +223,8 @@ namespace Enemies.Bug
 
         private void BugStop()
         {
-            seeker.StartPath(rb.position, rb.position, OnPathComplete);
+            var position = rb.position;
+            seeker.StartPath(position, position, OnPathComplete);
         }
 
         public void DestroyBug()
