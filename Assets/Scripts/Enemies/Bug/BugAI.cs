@@ -84,7 +84,7 @@ namespace Enemies.Bug
 
         void FixedUpdate()
         {
-            if (!_characterIsInRange && !_corpsesIsInRange)
+            if (!_characterIsInRange && !_corpsesIsInRange && isOnGround)
             {
                 bool pitIsAhead = Physics2D.Raycast(patrolingRaycastPosition.position, 
                     Vector3.down, patrolHorizontalRayCastLength, groundLayer);

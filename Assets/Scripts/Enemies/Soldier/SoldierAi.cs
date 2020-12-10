@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 public class SoldierAi : MonoBehaviour
 {
+    private Vector3 _targetPosition;
     [SerializeField] private int layerOfEnemieToDamage;
     private GameObject[] _bulletList;
     private const int NumberOfBullets = 30;
@@ -27,6 +28,7 @@ public class SoldierAi : MonoBehaviour
     public Transform rayCastPosition;
     [SerializeField] private float raycastLength;
     public LayerMask groundLayer;
+    public LayerMask characterLayer;
     private bool _isDead;
     private bool _showIdle;
     private bool _isFacingRight = true;
@@ -121,7 +123,9 @@ public class SoldierAi : MonoBehaviour
         var transformPosition = transform.position;
         Gizmos.DrawLine(transformPosition, transformPosition + _targetDirection);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transformPosition, transformPosition + corpsesOffset);
+        Gizmos.DrawLine(transformPosition, transformPosition + corpsesOffset); 
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawRay(transformPosition, _targetPosition);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -135,28 +139,51 @@ public class SoldierAi : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (!other.gameObject.CompareTag("Player"))
         {
-            _targetDirection = ((Vector2) other.gameObject.transform.position - (Vector2) transform.position).normalized;
-            Shoot();
+            return;
         }
+
+        var transformPosition = transform.position;
+        var targetPosition = other.gameObject.transform.position;
+        
+        _targetDirection = ((Vector2) targetPosition - (Vector2) transformPosition).normalized;
+        _targetPosition = targetPosition - transformPosition;
+        //Debug.DrawRay(transformPosition, targetPosition - transformPosition, Color.cyan , rayCastDirection.magnitude);
+        // if (Physics2D.Raycast((Vector2) transformPosition, _targetDirection, rayCastDirection.magnitude, groundLayer))
+        // {
+        //     return;
+        // }
+
+        if (Physics2D.Linecast(transformPosition, targetPosition, groundLayer))
+        {
+            _isAimingDown = false;
+            _isAimingForward = false;
+            _isAimingUp = false;
+            _showIdle = true;
+            return;
+        }
+
+        Shoot();
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (!other.gameObject.CompareTag("Player"))
         {
-            ChangeTriggerRadius(patrollingTriggerRadius);
-            _stopCoroutine = false;
-            _isAimingDown = false;
-            _isAimingForward = false;
-            _isAimingUp = false;
-            _shootingTime = 0;
-            animator.speed = 1;
-            if (hp.GetHp > 0)
-            {
-                StartCoroutine(Patrolling());
-            }
+            return;
+        }
+
+        ChangeTriggerRadius(patrollingTriggerRadius);
+        _stopCoroutine = false;
+        _isAimingDown = false;
+        _isAimingForward = false;
+        _isAimingUp = false;
+        _shootingTime = 0;
+        animator.speed = 1;
+        if (hp.GetHp > 0)
+        {
+            StartCoroutine(Patrolling());
         }
     }
 

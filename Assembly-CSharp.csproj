@@ -80,6 +80,11 @@
      <Compile Include="Assets\Scripts\Enemies\Bug\ZombieCorpses.cs" />
      <Compile Include="Assets\Scripts\Enemies\Soldier\SoldierAi.cs" />
      <Compile Include="Assets\Scripts\Environment\Generator.cs" />
+     <Compile Include="Assets\Scripts\Environment\MovingPlatform.cs" />
+     <Compile Include="Assets\Scripts\Environment\SecretsController.cs" />
+     <Compile Include="Assets\Scripts\Environment\Spawner.cs" />
+     <Compile Include="Assets\Scripts\Environment\TriggerEnter.cs" />
+     <Compile Include="Assets\Scripts\Environment\TriggerOut.cs" />
      <Compile Include="Assets\Scripts\FpsCounter.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/slllike/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
