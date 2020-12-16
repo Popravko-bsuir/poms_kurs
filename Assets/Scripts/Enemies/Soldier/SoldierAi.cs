@@ -28,7 +28,7 @@ public class SoldierAi : MonoBehaviour
     public Transform rayCastPosition;
     [SerializeField] private float raycastLength;
     public LayerMask groundLayer;
-    public LayerMask characterLayer;
+    public LayerMask aimLayer;
     private bool _isDead;
     private bool _showIdle;
     private bool _isFacingRight = true;
@@ -155,7 +155,7 @@ public class SoldierAi : MonoBehaviour
         //     return;
         // }
 
-        if (Physics2D.Linecast(transformPosition, targetPosition, groundLayer))
+        if (Physics2D.Linecast(transformPosition, targetPosition, aimLayer))
         {
             _isAimingDown = false;
             _isAimingForward = false;

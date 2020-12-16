@@ -7,6 +7,7 @@ namespace Enemies.Bug
 {
     public class ZombieCorpses : MonoBehaviour
     {
+        [SerializeField] private int bugsToSpawn;
         public GameObject bugPrefab;
         public Animator animator;
         public SpriteRenderer bugSpriteRanderer;
@@ -24,7 +25,7 @@ namespace Enemies.Bug
             if (other.gameObject.CompareTag("EnemieBug"))
             {
                 bugAi = other.gameObject.GetComponentInParent<BugAI>();
-                bugAi.DestroyBug();
+                bugAi.HideBug();
                 StartCoroutine(Swelling());
             }
 
@@ -67,10 +68,11 @@ namespace Enemies.Bug
 
         private void InstantiateBugs()
         {
-            for (int i = 0; i <= 4; i++)
+            var transform1 = transform;
+            for (int i = 0; i <= bugsToSpawn; i++)
             {
-                Vector3 offset = new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(0, 3), 0);
-                Instantiate(bugPrefab, transform.position + offset, transform.rotation);
+                var offset = new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(0, 3), 0);
+                Instantiate(bugPrefab, transform1.position + offset, transform1.rotation);
             }
         }
     }

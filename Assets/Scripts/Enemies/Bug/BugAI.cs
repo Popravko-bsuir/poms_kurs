@@ -8,7 +8,10 @@ namespace Enemies.Bug
     public class BugAI : MonoBehaviour
     {
         public Transform startPoint;
-        public Transform crushEffectTransform;
+        public SpriteRenderer spriteRenderer;
+        public CapsuleCollider2D capsuleCollider2D;
+        public BoxCollider2D biteCollider;
+        private bool _isDead;
         public ParticleSystem crushEffectParticleSystem;
         public CircleCollider2D trigger;
         public float agroTriggerRadius;
@@ -84,7 +87,7 @@ namespace Enemies.Bug
 
         void FixedUpdate()
         {
-            if (!_characterIsInRange && !_corpsesIsInRange && isOnGround)
+            if (!_characterIsInRange && !_corpsesIsInRange && isOnGround && !_isDead)
             {
                 bool pitIsAhead = Physics2D.Raycast(patrolingRaycastPosition.position, 
                     Vector3.down, patrolHorizontalRayCastLength, groundLayer);
@@ -97,20 +100,20 @@ namespace Enemies.Bug
             }
             else
             {
-                if (_path == null)
+                if (_path == null || _isDead)
                 {
                     return;
                 }
-
+                
                 if (_currentWaypoynt >= _path.vectorPath.Count)
                 {
                     _isReachedEndOfPath = true;
                     return;
                 }
-                else
-                {
-                    _isReachedEndOfPath = false;
-                }
+                // else
+                // {
+                //     _isReachedEndOfPath = false;
+                // }
                 
                 direction = ((Vector2) _path.vectorPath[_currentWaypoynt] - (Vector2)startPoint.position).normalized;
                 rb.AddForce(Vector2.right * (direction.x * speed /** Time.deltaTime*/));
@@ -184,6 +187,7 @@ namespace Enemies.Bug
 
             if (other.gameObject.CompareTag("Corpses"))
             {
+                trigger.radius = agroTriggerRadius;
                 _corpsesIsInRange = true;
             }
         }
@@ -216,6 +220,7 @@ namespace Enemies.Bug
 
             if (other.gameObject.CompareTag("Corpses"))
             {
+                trigger.radius = patrolTriggerRadius;
                 _corpsesIsInRange = false;
                 BugStop();
             }
@@ -227,16 +232,30 @@ namespace Enemies.Bug
             seeker.StartPath(position, position, OnPathComplete);
         }
 
-        public void DestroyBug()
+        public IEnumerator DestroyBug()
         {
-            gameObject.SetActive(false);
+            yield return new WaitForSeconds(2f);
+            spriteRenderer.enabled = true;
+            capsuleCollider2D.enabled = true;
+            biteCollider.enabled = true;
+            _isDead = false;
+            HideBug();
         }
 
         public void CrushingEffect()
         {
-            crushEffectTransform.parent = null;
+            spriteRenderer.enabled = false;
+            capsuleCollider2D.enabled = false;
+            biteCollider.enabled = false;
+            _isDead = true;
             crushEffectParticleSystem.Play(false);
-            DestroyBug();
+            StartCoroutine(DestroyBug());
+        }
+
+        public void HideBug()
+        {
+            BugStop();
+            gameObject.SetActive(false);
         }
     }
 }

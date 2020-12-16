@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
 namespace Character
 {
@@ -33,11 +35,20 @@ namespace Character
         private float _chargeTime;
         private float _chargeForce;
         private Grenade _grenadeScript;
-
+        
+        [Header("Canvas")]
+        public Text ammoCounter;
+        
         public float ForceScale => forceScale;
         public float ForceUpScale => forceUpScale;
         public float ChargeForce => _chargeForce;
         public bool IsChargingAlt => _isChargingAlt;
+
+        public int Ammo
+        {
+            get => ammo;
+            set => ammo = value;
+        }
 
 
         private void Start()
@@ -46,11 +57,12 @@ namespace Character
             _grenadeScript = grenadePrefab.GetComponent<Grenade>();
             _grenadeScript.SetMovement(movement);
             _grenadeScript.SetWeapon(this);
+            ammoCounter.text = ": " + ammo;
         }
 
         void Update()
         {
-            if (Input.GetMouseButton(1) && _canShootAlt && _timeTilNextShotAlt < Time.time && !movement.IsAimingUp && !movement.IsAimingDown)
+            if (CrossPlatformInputManager.GetButton("FireAlt") && _canShootAlt && _timeTilNextShotAlt < Time.time && !movement.IsAimingUp && !movement.IsAimingDown)
             {
                 if (ammo > 10)
                 {
@@ -73,7 +85,7 @@ namespace Character
             }
         
 
-            if (Input.GetMouseButtonUp(1) && _canShootAlt && _timeTilNextShotAlt < Time.time && 
+            if (CrossPlatformInputManager.GetButtonUp("FireAlt") && _canShootAlt && _timeTilNextShotAlt < Time.time && 
                 !movement.IsAimingUp && !movement.IsAimingDown && ammo > 10)
             {
                 _isChargingAlt = false;
@@ -84,9 +96,10 @@ namespace Character
                 _timeTilNextShotAlt = Time.time + rateOfFireAlt;
                 trajectory.Hide();
                 ammo -= 10;
+                ammoCounter.text = ": " + ammo;
             }
 
-            if (Input.GetButton("Fire1") && _canShoot && _timeTilNextShot < Time.time)
+            if (CrossPlatformInputManager.GetButton("Fire") && _canShoot && _timeTilNextShot < Time.time)
             {
                 _canShootAlt = false;
                 _timeTilNextShot = Time.time + rateOfFire;
@@ -94,6 +107,7 @@ namespace Character
                 {
                     Shoot();
                     ammo--;
+                    ammoCounter.text = ": " + ammo;
                 }
                 else
                 {
@@ -102,7 +116,7 @@ namespace Character
                 }
             }
 
-            if (Input.GetButtonUp("Fire1") && _canShoot)
+            if (CrossPlatformInputManager.GetButton("Fire") && _canShoot)
             {
                 _canShootAlt = true;
             }
@@ -111,6 +125,7 @@ namespace Character
         public void AddAmmo(int ammoToAdd)
         {
             ammo += ammoToAdd;
+            ammoCounter.text = ": " + ammo;
         }
 
         void ShootAlternative()

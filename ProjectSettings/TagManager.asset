@@ -12,6 +12,7 @@ TagManager:
   - EnemieBug
   - Bullet
   - Generator
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -30,7 +31,7 @@ TagManager:
   - EnemieBug
   - Generator
   - Platform
-  - 
+  - Boss
   - 
   - 
   - 

@@ -133,8 +133,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf97e7c7de5b5e9479aa4ea19fa223a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weapon: {fileID: 0}
+  _movement: {fileID: 0}
   rb: {fileID: 8815823585049004865}
   explosionEffect: {fileID: 8276909605969858866, guid: c26a304df189af54ebfafc523541a3d3,
     type: 3}
   explosionTimer: 0
   explosionTime: 5
+  soldier:
+    serializedVersion: 2
+    m_Bits: 2048
+  juk:
+    serializedVersion: 2
+    m_Bits: 0

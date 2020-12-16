@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Character
@@ -11,6 +12,8 @@ namespace Character
         public GameObject explosionEffect;
         public float explosionTimer;
         public float explosionTime = 5f;
+        public LayerMask soldier;
+        public LayerMask juk;
         
         void Start()
         {
@@ -33,12 +36,12 @@ namespace Character
 
         void Update()
         {
-            explosionTimer += Time.deltaTime;
-            if (explosionTimer > explosionTime)
-            {
-                Instantiate(explosionEffect,transform.position, transform.rotation);
-                Destroy(gameObject);
-            }
+            // explosionTimer += Time.deltaTime;
+            // if (explosionTimer > explosionTime)
+            // {
+            //     Instantiate(explosionEffect,transform.position, transform.rotation);
+            //     Destroy(gameObject);
+            // }
         }
 
         public void SetMovement(Movement movement)
@@ -48,6 +51,25 @@ namespace Character
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.layer == 10)
+            {
+                return;
+            }
+
+            var transform1 = transform;
+            var collider2D = Physics2D.OverlapCircle(transform1.position, 2.8f, soldier);
+
+            if (collider2D != null)
+            {
+                collider2D.gameObject.GetComponentInChildren<HealthPoints>().TakeDamage(10000000);
+            }
+
+            Instantiate(explosionEffect,transform1.position, transform1.rotation);
+            Destroy(gameObject);
         }
     }
 }

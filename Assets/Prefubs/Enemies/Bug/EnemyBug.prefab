@@ -9893,7 +9893,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPoint: {fileID: 6374380376094564741}
-  crushEffectTransform: {fileID: 3556592329823083207}
+  spriteRenderer: {fileID: 3556592330104417390}
+  capsuleCollider2D: {fileID: 3556592329017541643}
+  biteCollider: {fileID: 3556592328698175067}
   crushEffectParticleSystem: {fileID: 3556592329517519177}
   trigger: {fileID: 3556592329794268922}
   agroTriggerRadius: 25
@@ -9919,7 +9921,7 @@ MonoBehaviour:
   patrolHorizontalRayCastLength: 1.69
   groundLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 65792
   characterLayer:
     serializedVersion: 2
     m_Bits: 1024

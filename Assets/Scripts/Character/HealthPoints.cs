@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Menu;
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,17 +11,25 @@ public class HealthPoints : MonoBehaviour
     public Slider healthBar;
     [SerializeField] private int healthPoints;
     private int _maxHealthPoints;
+    public DeathMenuManager _deathMenuManager;
     
     public int GetHp=> healthPoints;
+
+    public void SetHp(int hp)
+    {
+        healthPoints = hp;
+        healthBar.maxValue = healthPoints;
+        healthBar.value = healthPoints;
+    }
 
     private void Start()
     {
         _maxHealthPoints = healthPoints;
-        if (gameObject.layer == 10)
-        {
-            healthBar.maxValue = healthPoints;
-            healthBar.value = healthPoints;
-        }
+        // if (gameObject.layer == 10)
+        // {
+        //     healthBar.maxValue = healthPoints;
+        //     healthBar.value = healthPoints;
+        // }
     }
 
     public void TakeDamage(int damage)
@@ -34,6 +43,7 @@ public class HealthPoints : MonoBehaviour
             }
             else if(gameObject.layer == 10)
             {
+                _deathMenuManager.ShowDeathScreen();
                 gameObject.SetActive(false);
             }
         }
@@ -69,7 +79,10 @@ public class HealthPoints : MonoBehaviour
         }
         
         return true;
-        
     }
 
+    public void SetDeathMenuManager(DeathMenuManager deathMenu)
+    {
+        _deathMenuManager = deathMenu;
+    }
 }

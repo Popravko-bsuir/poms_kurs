@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
+using UnityStandardAssets.CrossPlatformInput;
 
 namespace Character
 {
@@ -86,7 +87,8 @@ namespace Character
                 _canDodge = true;
             }
             
-            animator.SetFloat("horizontal", Mathf.Abs(Input.GetAxis("Horizontal")));
+            // animator.SetFloat("horizontal", Mathf.Abs(Input.GetAxis("Horizontal")));
+            animator.SetFloat("horizontal", Mathf.Abs(_direction.x));
             animator.SetFloat("vertical", rb.velocity.y);
             animator.SetBool("onGround", onGround);
             animator.SetBool("superIsStarted", _superIsStarted);
@@ -110,7 +112,7 @@ namespace Character
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.W) && !weapon.IsChargingAlt && onGround)
+            if (CrossPlatformInputManager.GetButtonDown("AimUp") && !weapon.IsChargingAlt && onGround)
             {
                 _isAimingDown = false;
                 firePoint.localPosition = new Vector3(0.506f, 1.631f, 0f);
@@ -118,7 +120,7 @@ namespace Character
                 _isAimingUp = true;
             }
             
-            if (Input.GetKeyDown(KeyCode.S) && !weapon.IsChargingAlt && onGround)
+            if (CrossPlatformInputManager.GetButtonDown("AimDown") && !weapon.IsChargingAlt && onGround)
             {
                 _isAimingUp = false;
                 firePoint.localPosition = new Vector3(0.55f, 0.55f, 0f);
@@ -126,7 +128,7 @@ namespace Character
                 _isAimingDown = true;
             }
             
-            if (Input.GetKeyUp(KeyCode.W) && _isAimingUp || Input.GetKeyUp(KeyCode.S) && _isAimingDown || 
+            if (CrossPlatformInputManager.GetButtonUp("AimUp") && _isAimingUp || CrossPlatformInputManager.GetButtonUp("AimDown") && _isAimingDown || 
                 Mathf.Abs(_direction.x) > 0 && _isAimingUp || Mathf.Abs(_direction.x) > 0 && _isAimingDown)
             {
                 AimForward();
@@ -158,7 +160,7 @@ namespace Character
             //     //Debug.Log("balls");
             // }
 
-            if (Input.GetButtonDown("Jump"))
+            if (CrossPlatformInputManager.GetButtonDown("Jump"))
             {
                 if (_isAimingUp || _isAimingDown)
                 {
@@ -174,7 +176,7 @@ namespace Character
                 EarthHitPreparation();
             }
 
-            if (Input.GetButtonDown("AirDodge") && !onGround && _canDodge)
+            if (CrossPlatformInputManager.GetButtonDown("Dash") && !onGround && _canDodge)
             {
                 StartCoroutine(dashAnimation.ShowDashAnimation(dashTime));
                 CheckCollisionAhead();
@@ -195,7 +197,7 @@ namespace Character
                 _canDodge = false;
             }
 
-            _direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            _direction = new Vector2(/*Input.GetAxisRaw("Horizontal") */CrossPlatformInputManager.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         }
 
         private void FixedUpdate()
@@ -245,7 +247,7 @@ namespace Character
                     {
                         rb.gravityScale = gravity * fallMultiplier;
                     }
-                    else if (rb.velocity.y > 0 && !Input.GetButton("Jump"))
+                    else if (rb.velocity.y > 0 && !CrossPlatformInputManager.GetButton("Jump"))
                     {
                         rb.gravityScale = gravity * (fallMultiplier / 2);
                     }

@@ -5,7 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstarPathfindingProject", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{77EF5B5A-F084-7F9F-0018-D5D3AC8F3079}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{F2F7C262-557D-E914-7C68-71DBEBCA38A0}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstarPathfindingProjectEditor", "AstarPathfindingProjectEditor.csproj", "{1B80BDFD-0EC2-C6C7-4BC4-ED6397CD9A49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{5A21F4DC-069F-3DE1-CD02-79A0DD0B575F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageToolsEditor", "PackageToolsEditor.csproj", "{F2A970FE-BF3E-344E-9962-A3B7213424AA}"
 EndProject
@@ -23,10 +27,18 @@ Global
 		{77EF5B5A-F084-7F9F-0018-D5D3AC8F3079}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77EF5B5A-F084-7F9F-0018-D5D3AC8F3079}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77EF5B5A-F084-7F9F-0018-D5D3AC8F3079}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2F7C262-557D-E914-7C68-71DBEBCA38A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2F7C262-557D-E914-7C68-71DBEBCA38A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2F7C262-557D-E914-7C68-71DBEBCA38A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2F7C262-557D-E914-7C68-71DBEBCA38A0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B80BDFD-0EC2-C6C7-4BC4-ED6397CD9A49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B80BDFD-0EC2-C6C7-4BC4-ED6397CD9A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B80BDFD-0EC2-C6C7-4BC4-ED6397CD9A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B80BDFD-0EC2-C6C7-4BC4-ED6397CD9A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A21F4DC-069F-3DE1-CD02-79A0DD0B575F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A21F4DC-069F-3DE1-CD02-79A0DD0B575F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A21F4DC-069F-3DE1-CD02-79A0DD0B575F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A21F4DC-069F-3DE1-CD02-79A0DD0B575F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F2A970FE-BF3E-344E-9962-A3B7213424AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F2A970FE-BF3E-344E-9962-A3B7213424AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2A970FE-BF3E-344E-9962-A3B7213424AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
